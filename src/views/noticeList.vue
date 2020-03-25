@@ -46,7 +46,7 @@ export default {
     listDetail,
     Paginate
   },
-  // 초기화
+  // 초기화, 기본 값 설정
   data() {
     return {
       selected: 1,

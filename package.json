@@ -11,7 +11,6 @@
     "@nuxtjs/axios": "^5.9.5",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vue-ads-pagination": "^2.1.7",
     "vue-router": "^3.1.6",
     "vuejs-paginate": "^2.1.0"
   },
