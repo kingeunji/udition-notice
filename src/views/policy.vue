@@ -3,21 +3,23 @@
     <div class="top">
       <div>약관 및 정책</div>
       <ul>
-        <!-- click 이벤트로 함수가 실행되는게 아니라 categoryNo라는 state값을 바꿔주고 동시에 이 값으로 class 변경 -->
-        <li @click="categoryNo = 1" :class="{ active: categoryNo == 1}">서비스 이용약관</li>
-        <li @click="categoryNo = 2" :class="{ active: categoryNo == 2}">유료서비스 이용약관</li>
-        <li @click="categoryNo = 3" :class="{ active: categoryNo == 3}">개인정보 처리방침</li>
+        <li
+          v-for="(category, i) in categorys"
+          :key="i"
+          @click="selectCategory(i + 1)"
+          :class="{active: i == 0}"
+        >{{ category }}</li>
       </ul>
     </div>
     <div class="content-container">
       <select id="num" @change="selectTerms()">
         <option v-for="(version, i) in versions" :key="i" :value="i" selected>{{ version.version }}</option>
       </select>
-      <div class="content">{{this.content[this.termsNo].contents}}</div>
+      <div class="content">{{ this.content[this.termsNo].contents }}</div>
     </div>
   </section>
 </template>
- 
+
 <script>
 import { policy } from "../api/index";
 import { versionList } from "../api/index";
@@ -27,6 +29,11 @@ export default {
   components: {},
   data() {
     return {
+      categorys: [
+        "서비스 이용약관",
+        "유료서비스 이용약관",
+        "개인정보 처리방침"
+      ],
       categoryNo: 1,
       termsNo: 0,
       content: [],
@@ -35,25 +42,28 @@ export default {
   },
   created() {
     this.fetchData();
-    // this.fetchVersion();
   },
-  // react에서 componentDidUpdate같은거!
   watch: {
-    // data()에서 categoryNo값이 바뀔 때마다 fetchCategory 실행
     categoryNo() {
       this.fetchData();
     },
     termsNo() {}
   },
   methods: {
+    selectCategory: function(i) {
+      this.categoryNo = i;
+      let a = this.categorys.splice(i - 1, 1);
+      this.categorys.unshift(a[0]);
+    },
     // form-data형식으로 데이터를 담아서 백한테 보내준다.
     async fetchData() {
-      var bodyFormData = new FormData();
-      bodyFormData.append("categoryNo", this.categoryNo);
-      const res = await policy.list(bodyFormData);
+      console.log(this.catrgorys);
+      var formData = new FormData();
+      formData.append("categoryNo", this.categoryNo);
+      const res = await policy.list(formData);
       this.content = res.data.result;
       // version list data
-      const resVer = await versionList.list(bodyFormData);
+      const resVer = await versionList.list(formData);
       this.versions = resVer.data.result;
     },
     selectTerms: function() {
