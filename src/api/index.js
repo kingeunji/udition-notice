@@ -15,9 +15,6 @@ export const listPage = {
     }
 }
 
-    baseURL: "http://192.168.0.44:8081/",
-});
-
 // policy
 export const policy = {
     list(formData) {

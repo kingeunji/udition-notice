@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <noticeList />
+    <policy />
     <!-- <policyClassify /> -->
   </div>
 </template>
@@ -15,7 +16,7 @@ import policy from "./views/policy";
 export default {
   name: "App",
   components: {
-    noticeList
+    noticeList,
     // policyClassify
     // noticeDetail
     policy
