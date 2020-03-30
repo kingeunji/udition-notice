@@ -6,6 +6,6 @@
 
 // export const (urlname) = {
 //     list() {
-//         return instance.(호출방식)('나머지 주소', {request})
+//         return instance.get('나머지 주소', {request})
 //     }
 // }
