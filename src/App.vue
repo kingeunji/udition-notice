@@ -1,16 +1,19 @@
 <template>
   <div id="app">
-    <noticeDetail />
+    <!-- <noticeDetail /> -->
+    <policy />
   </div>
 </template>
 
 <script>
-import noticeDetail from "./views/noticeDetail";
+// import noticeDetail from "./views/noticeDetail";
+import policy from "./views/policy";
 
 export default {
   name: "App",
   components: {
-    noticeDetail
+    // noticeDetail
+    policy
   }
 };
 </script>
@@ -24,6 +27,7 @@ export default {
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
+  font-family: SpoqaHanSans;
   letter-spacing: normal;
   margin: 0;
   padding: 0;

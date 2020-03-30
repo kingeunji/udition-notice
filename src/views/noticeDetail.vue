@@ -84,9 +84,7 @@ section {
     margin: 75px 0 30px;
 
     div {
-      width: 722px;
       height: 22px;
-      font-family: SpoqaHanSans;
       font-size: 14px;
       line-height: 1.79;
       color: #b5b5b5;
@@ -116,7 +114,6 @@ section {
       justify-content: space-between;
 
       button {
-        font-family: SpoqaHanSans;
         font-size: 15px;
         color: #303236;
         width: 90px;
@@ -130,9 +127,10 @@ section {
 
   /* 하단(다른 글) */
   .bottom {
+    width: 100%;
+
     &-title {
       margin: 22px 0;
-      width: 750px;
       height: 32px;
       font-family: NotoSansCJKkr;
       font-size: 17px;
@@ -150,12 +148,12 @@ section {
     }
 
     &-list {
-      font-family: SpoqaHanSans;
       font-size: 17px;
       line-height: 1.47;
       color: #2e3032;
       border-top: solid 1px #e5e5e5;
       padding: 30px 0;
+      cursor: pointer;
 
       div {
         font-size: 14px;

@@ -1,22 +1,22 @@
 <template>
   <div class="icon-container">
     <div class="twitter" @click="shareSNS(data, 1)">
-      <img src="../../assets/images/twitter.png" alt="twitter" />
+      <img src="../../assets/images/sns/twitter.png" alt="twitter" />
     </div>
     <div class="naver" @click="shareSNS(data, 2)">
-      <img src="../../assets/images/naver.png" alt="naver" />
+      <img src="../../assets/images/sns/naver.png" alt="naver" />
     </div>
     <div class="line" @click="shareLine(data)">
-      <img src="../../assets/images/line.png" alt="line" />
+      <img src="../../assets/images/sns/line.png" alt="line" />
     </div>
     <div class="kakao">
-      <img src="../../assets/images/kakao.png" alt="kakao" />
+      <img src="../../assets/images/sns/kakao.png" alt="kakao" />
     </div>
     <div class="facebook" @click="ShareFacebook(data)">
-      <img src="../../assets/images/facebook.png" alt="facebook" />
+      <img src="../../assets/images/sns/facebook.png" alt="facebook" />
     </div>
     <div class="share">
-      <img src="../../assets/images/share.png" alt="share" />
+      <img src="../../assets/images/sns/share.png" alt="share" />
     </div>
   </div>
 </template>
@@ -47,15 +47,13 @@ export default {
       }
     },
     shareLine: function(data) {
-      var title = data.title;
-      var url = data.url;
       var shareURL =
-        "http://line.me/R/msg/text?" + encodeURIComponent(title + url);
+        "http://line.me/R/msg/text?" +
+        encodeURIComponent(data.title + data.url);
       document.location = shareURL;
     },
     ShareFacebook: function(data) {
-      var url = data.url;
-      var shareURL = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+      var shareURL = "https://www.facebook.com/sharer/sharer.php?u=" + data.url;
       document.location = shareURL;
     }
   }

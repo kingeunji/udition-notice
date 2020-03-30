@@ -1,11 +1,18 @@
-// import axios from 'axios'
+import axios from 'axios'
 
-// const instance = axios.create({
-//     baseURL: "",
-// });
+const instance = axios.create({
+    baseURL: "http://192.168.0.44:8081/",
+});
 
-// export const (urlname) = {
-//     list() {
-//         return instance.get('나머지 주소', {request})
-//     }
-// }
+// policy
+export const policy = {
+    list(formData) {
+        return instance.post('api/terms/list', formData)
+    }
+}
+
+export const versionList = {
+    list(formData) {
+        return instance.post('api/terms/versionList', formData)
+    }
+}
