@@ -105,6 +105,7 @@ export default {
     justify-content: space-between;
     padding: 25px 0;
     border-bottom: solid 1px #e5e5e5;
+    cursor: pointer;
     .detail-text {
       .category {
         margin-top: 15px;
