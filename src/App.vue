@@ -1,8 +1,9 @@
 <template>
   <div id="app">
     <noticeList />
-    <policy />
     <!-- <policyClassify /> -->
+    <!-- <noticeDetail /> -->
+    <!-- <policy /> -->
   </div>
 </template>
 
@@ -11,15 +12,15 @@ import noticeList from "./views/noticeList";
 // import policyClassify from "./views/policyClassify";
 // App.use(cors(require("cors")));
 // import noticeDetail from "./views/noticeDetail";
-import policy from "./views/policy";
+// import policy from "./views/policy";
 
 export default {
   name: "App",
   components: {
-    noticeList,
+    noticeList
     // policyClassify
     // noticeDetail
-    policy
+    // policy
   }
 };
 </script>
