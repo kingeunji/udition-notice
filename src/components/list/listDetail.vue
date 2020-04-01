@@ -1,6 +1,11 @@
 <template>
   <div class="content">
-    <div @click="goToDetail(i)" v-for="(data, i) in datas" :key="i" class="detail">
+    <div
+      @click="goToDetail(i)"
+      v-for="(data, i) in datas"
+      :key="i"
+      class="detail"
+    >
       <div class="detail-text">
         <p class="category">{{ data.title }}</p>
         <h3>{{ data.tts }}</h3>
@@ -9,10 +14,13 @@
       <div class="detail-img">
         <img
           :src="
-              'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
-                data.image
-            "
+            'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
+              data.image
+          "
           alt="noticeimg"
+          :class="{
+            active: data.image.length > 0 ? image == true : image == false
+          }"
         />
       </div>
     </div>
@@ -25,13 +33,15 @@ export default {
   props: {
     datas: {
       type: Array,
-      required: true
+      required: true,
+      createDate: ""
     }
   },
   data() {
     return {
       loading: false,
-      page: 0
+      page: 0,
+      image: false
     };
   },
   methods: {
@@ -82,6 +92,10 @@ export default {
       img {
         width: 200px;
         height: 130px;
+
+        &.active {
+          display: none;
+        }
       }
     }
   }
