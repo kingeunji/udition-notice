@@ -35,7 +35,7 @@ export default {
   // 초기화, 기본 값 설정
   data() {
     return {
-      selected: 1
+      selected: 2
     };
   },
   methods: {

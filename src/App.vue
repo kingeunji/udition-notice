@@ -1,25 +1,16 @@
 <template>
   <div id="app">
-    <noticeList />
-    <policy />
-    <!-- <policyClassify /> -->
+    <router-view :key="$route.fullPath" />
   </div>
 </template>
 
 <script>
-import noticeList from "./views/noticeList";
 // import policyClassify from "./views/policyClassify";
-// App.use(cors(require("cors")));
-// import noticeDetail from "./views/noticeDetail";
-import policy from "./views/policy";
 
 export default {
   name: "App",
   components: {
-    noticeList,
     // policyClassify
-    // noticeDetail
-    policy
   }
 };
 </script>

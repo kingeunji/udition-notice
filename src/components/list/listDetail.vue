@@ -1,13 +1,19 @@
 <template>
   <div class="content">
-    <div v-for="item in items" :key="item.id" class="detail">
+    <div @click="goToDetail(data)" v-for="data in datas" :key="data.noticeNo" class="detail">
       <div class="detail-text">
-        <p class="category">{{ item.category }}</p>
-        <h3>{{ item.title }}</h3>
-        <p class="date">{{ item.date }}</p>
+        <p class="category">{{ data.title }}</p>
+        <h3>{{ data.tts }}</h3>
+        <p class="date">{{ data.createDate }}</p>
       </div>
       <div class="detail-img">
-        <img :src="item.img" alt="noticeimg" />
+        <img
+          :src="
+            'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
+              data.image
+          "
+          alt="noticeimg"
+        />
       </div>
     </div>
   </div>
@@ -15,85 +21,25 @@
 
 <script>
 export default {
-  name: "listDetail",
+  components: {},
+  props: {
+    datas: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
-      items: [
-        {
-          id: 1,
-          category: "공지",
-          title: "유디션에 오신 걸 환영합니다.",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 2,
-          category: "공지",
-          title: "뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 3,
-          category: "공지",
-          title:
-            "벤-바이브 소속사 메이저나인, 오디션앱 유디션과 함께신인 아이돌 뽑는다",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 5,
-          category: "공지",
-          title: "뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 6,
-          category: "공지",
-          title: "뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 7,
-          category: "공지",
-          title: "뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 8,
-          category: "공지",
-          title: "뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 9,
-          category: "공지",
-          title: "뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        },
-        {
-          id: 10,
-          category: "공지",
-          title: "뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)",
-          date: "2020.02.20",
-          img:
-            "https://storage.googleapis.com/udition-web/fileFolder/20200323_aad8539d_c1eb_401a_baa8_1b31df47d1c5.jpg"
-        }
-      ]
+      loading: false,
+      page: 0
     };
+  },
+  methods: {
+    goToDetail(data) {
+      let num = data.noticeNo;
+      let type = data.noticeType;
+      this.$router.push(`/notice-detail:id=${num}=${type}`);
+    }
   }
 };
 </script>
@@ -109,7 +55,8 @@ export default {
     .detail-text {
       .category {
         margin-top: 15px;
-        width: 46px;
+        padding: 2px 5px;
+        display: inline-block;
         border-radius: 2px;
         border: solid 1px #50b0b1;
         font-size: 14px;
