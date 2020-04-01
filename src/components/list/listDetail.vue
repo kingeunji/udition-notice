@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <div @click="goToDetail(i)" v-for="(data, i) in datas" :key="i" class="detail">
+    <div @click="goToDetail(data)" v-for="data in datas" :key="data.noticeNo" class="detail">
       <div class="detail-text">
         <p class="category">{{ data.title }}</p>
         <h3>{{ data.tts }}</h3>
@@ -9,9 +9,9 @@
       <div class="detail-img">
         <img
           :src="
-              'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
-                data.image
-            "
+            'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
+              data.image
+          "
           alt="noticeimg"
         />
       </div>
@@ -35,8 +35,10 @@ export default {
     };
   },
   methods: {
-    goToDetail(i) {
-      this.$router.push(`/notice-detail:id=${i}`);
+    goToDetail(data) {
+      let num = data.noticeNo;
+      let type = data.noticeType;
+      this.$router.push(`/notice-detail:id=${num}=${type}`);
     }
   }
 };

@@ -3,10 +3,18 @@
     <h2>공지사항</h2>
     <div class="list">
       <ul class="select-list">
-        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">전체</li>
-        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">공지</li>
-        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">이벤트</li>
-        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">보도자료</li>
+        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">
+          전체
+        </li>
+        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">
+          공지
+        </li>
+        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">
+          이벤트
+        </li>
+        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">
+          보도자료
+        </li>
       </ul>
       <div class="content-container">
         <listDetail :datas="noticeList" />
@@ -69,6 +77,8 @@ export default {
       // API list(formData);
       const response = await listPage.list(formData);
       this.noticeList = response.data.result;
+
+      // 페이지네이션 번호 범위 지정
       let a = this.noticeList[0].noticeCnt;
       this.pageCount = Math.ceil(a / 10);
     },

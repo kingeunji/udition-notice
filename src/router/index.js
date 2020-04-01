@@ -8,6 +8,7 @@ Vue.use(VueRouter);
 
 // route 설정하기
 export default new VueRouter({
+    mode : 'history',
     routes: [
         {
             path: '/notice',

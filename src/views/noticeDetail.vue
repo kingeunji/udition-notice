@@ -2,31 +2,38 @@
   <section id="detail">
     <div class="top">
       <div class="top-title">{{ content.title }}</div>
-      <div class="top-date">{{ this.date }}</div>
+      <div class="top-date">{{ this.newDate[0] }}</div>
     </div>
     <div class="content-container">
       <img
-        :src="'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' + content.image"
+        :src="
+          'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
+            content.image
+        "
         alt="img"
+        :class=" { active: content.image.length > 0 ? image == true : image == false}"
       />
       <!-- content에는 v-html=""로 받아온 데이터 넣기 -->
       <div class="content">{{ content.tts }}</div>
       <div class="buttons">
-        <button>목록으로</button>
+        <button>
+          <router-link to="/notice">목록으로</router-link>
+        </button>
         <sns :data="content" />
       </div>
     </div>
     <div class="bottom">
       <div class="bottom-title">
-        <span>{{ this.noticeType[this.content.noticeType]}}</span> 카테고리 다른 글
+        <span>{{ this.noticeType[this.content.noticeType] }}</span> 카테고리
+        다른 글
       </div>
-      <div class="bottom-list">
-        뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)
-        <div>2020.02.20</div>
+      <div class="bottom-list" @click="goToDetail(content.preNoticeNo1)">
+        {{this.content.preTitle1}}
+        <div>{{this.newDate[1]}}</div>
       </div>
-      <div class="bottom-list">
-        뮤디션 프로젝트 02 Your 스트리밍 이벤트! (~03/25)
-        <div>2020.02.20</div>
+      <div class="bottom-list" @click="goToDetail(content.preNoticeNo2)">
+        {{this.content.preTitle2}}
+        <div>{{this.newDate[2]}}</div>
       </div>
     </div>
   </section>
@@ -34,7 +41,6 @@
 
 <script>
 import { noticeDetail } from "../api/index";
-// import { listPage } from "../api/index";
 import sns from "../components/detail/sns";
 
 export default {
@@ -45,34 +51,49 @@ export default {
   data() {
     return {
       content: {},
-      date: "",
+      date: [],
+      newDate: [],
       noticeType: {
         0: "전체",
         1: "공지",
         2: "이벤트",
         3: "보도자료"
       },
-      other: []
+      image: false
     };
   },
   created() {
+    console.log(this.$route.params.id);
     this.fetchData();
   },
   methods: {
     async fetchData() {
       let id = this.$route.params.id.split("=")[1];
+      let type = this.$route.params.id.split("=")[2];
       var formData = new FormData();
       formData.append("noticeNo", id);
+      formData.append("noticeType", type);
       const res = await noticeDetail.list(formData);
       this.content = res.data.result[0];
-      let a = this.content.createDate.substr(0, 10);
-      let b = a.split("-");
-      this.date = b[0] + "." + b[1] + "." + b[2];
 
-      // var otherData = await new FormData();
-      // await otherData.append("noticeType", this.content.noticeType);
-      // const res2 = await listPage.list(formData);
-      // console.log(res2);
+      // 날짜 계산
+      this.date.push(
+        this.content.createDate,
+        this.content.preCreateDate1,
+        this.content.preCreateDate2
+      );
+
+      for (let i = 0; i < this.date.length; i++) {
+        let a = this.date[i].substr(0, 10);
+        let b = a.split("-");
+        this.newDate.push(b[0] + "." + b[1] + "." + b[2]);
+      }
+    },
+    goToDetail(num) {
+      console.log(num);
+      // this.count += 1;
+      // console.log(this.count);
+      this.$router.push(`/notice-detail:id=${num}=${this.content.noticeType}`);
     }
   }
 };
@@ -119,6 +140,10 @@ section {
     img {
       width: 750px;
       height: auto;
+
+      &.active {
+        display: none;
+      }
     }
 
     .content {
@@ -132,12 +157,15 @@ section {
 
       button {
         font-size: 15px;
-        color: #303236;
         width: 90px;
         height: 34px;
         border-radius: 4px;
         border: solid 1px #7e7e7e;
         cursor: pointer;
+
+        a {
+          color: #303236;
+        }
       }
     }
   }
