@@ -11,10 +11,11 @@
             content.image
         "
         alt="img"
-        :class=" { active: content.image.length > 0 ? image == true : image == false}"
+        :class="{
+          active: content.image.length > 0 ? image == true : image == false
+        }"
       />
-      <!-- content에는 v-html=""로 받아온 데이터 넣기 -->
-      <div class="content">{{ content.tts }}</div>
+      <div class="content" v-html="content.tts"></div>
       <div class="buttons">
         <button>
           <router-link to="/notice">목록으로</router-link>
@@ -28,12 +29,12 @@
         다른 글
       </div>
       <div class="bottom-list" @click="goToDetail(content.preNoticeNo1)">
-        {{this.content.preTitle1}}
-        <div>{{this.newDate[1]}}</div>
+        {{ this.content.preTitle1 }}
+        <div>{{ this.newDate[1] }}</div>
       </div>
       <div class="bottom-list" @click="goToDetail(content.preNoticeNo2)">
-        {{this.content.preTitle2}}
-        <div>{{this.newDate[2]}}</div>
+        {{ this.content.preTitle2 }}
+        <div>{{ this.newDate[2] }}</div>
       </div>
     </div>
   </section>

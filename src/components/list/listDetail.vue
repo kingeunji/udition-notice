@@ -1,9 +1,14 @@
 <template>
   <div class="content">
-    <div @click="goToDetail(data)" v-for="data in datas" :key="data.noticeNo" class="detail">
+    <div
+      @click="goToDetail(data)"
+      v-for="data in datas"
+      :key="data.noticeNo"
+      class="detail"
+    >
       <div class="detail-text">
-        <p class="category">{{ data.title }}</p>
-        <h3>{{ data.tts }}</h3>
+        <p class="category">{{ noticeType[data.noticeType] }}</p>
+        <h3>{{ data.title }}</h3>
         <p class="date">{{ data.createDate }}</p>
       </div>
       <div class="detail-img">
@@ -13,6 +18,9 @@
               data.image
           "
           alt="noticeimg"
+          :class="{
+            active: data.image.length > 0 ? image == true : image == false
+          }"
         />
       </div>
     </div>
@@ -25,13 +33,21 @@ export default {
   props: {
     datas: {
       type: Array,
-      required: true
+      required: true,
+      createDate: ""
     }
   },
   data() {
     return {
       loading: false,
-      page: 0
+      page: 0,
+      noticeType: {
+        0: "전체",
+        1: "공지",
+        2: "이벤트",
+        3: "보도자료"
+      },
+      image: false
     };
   },
   methods: {
@@ -84,6 +100,10 @@ export default {
       img {
         width: 200px;
         height: 130px;
+
+        &.active {
+          display: none;
+        }
       }
     }
   }

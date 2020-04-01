@@ -4,15 +4,28 @@
       <div class="section">
         <div class="board-container">
           <h3>활성화된 분류</h3>
-          <board v-for="item in activation" :key="item.id" class="board-1">
-            <card class="card-1" draggable="true">
+          <board
+            v-for="item in activation"
+            :key="item.title"
+            :id="board1"
+            class="board-1"
+          >
+            <card :id="card1" class="card-1" draggable="true">
               <p>{{ item.title }} ({{ item.total }})</p>
             </card>
           </board>
           <h3>비활성화 분류</h3>
-          <board v-for="(item, i) in disabled" :key="item.id" class="board-2">
-            <card class="card-2" draggable="true">
-              <p :class="{ refresh: delect == true }" @click="handle_delect(i)">
+          <board
+            v-for="(item, index) in disabled"
+            :key="item.id"
+            :id="board2"
+            class="board-2"
+          >
+            <card :id="card2" class="card-2" draggable="true">
+              <p
+                :class="{ refresh: item.delect == true }"
+                @click="handle_delect(index)"
+              >
                 {{ item.title }} ({{ item.total }})
               </p>
             </card>
@@ -31,6 +44,9 @@
           </button>
         </div>
       </div>
+      <!-- 테스트용 -->
+      <button @click="visible = true">Toggle Modal</button>
+      <app-my-modal v-bind:visible="visible" @change="changeModal" />
       <!-- 분류 추가 모달 등장-->
       <div class="cover-bg" v-if="cancle_modal">
         <div class="bg-white">
@@ -69,9 +85,9 @@
 <script>
 import board from "./board";
 import card from "./card";
+import myModal from "./my-modal";
 export default {
   name: "",
-  props: ["id"],
   data() {
     return {
       visible: false,
@@ -79,6 +95,10 @@ export default {
       save_modal: false,
       newTitle: "",
       delect: false,
+      board1: "board1",
+      board2: "board2",
+      card1: "card1",
+      card2: "card2",
       activation: [
         {
           id: 1,
@@ -97,7 +117,7 @@ export default {
         },
         {
           id: 4,
-          title: "서비스 이용약관",
+          title: "oidsl",
           total: 20
         }
       ],
@@ -105,22 +125,26 @@ export default {
         {
           id: 1,
           title: "kkkkk",
-          total: 3
+          total: 3,
+          delect: false
         },
         {
           id: 2,
           title: "개인정보 처리방침",
-          total: 8
+          total: 8,
+          delect: false
         },
         {
           id: 3,
           title: "유료서비스 이용약관",
-          total: 10
+          total: 10,
+          delect: false
         },
         {
           id: 4,
           title: "서비스 이용약관",
-          total: 20
+          total: 20,
+          delect: false
         }
       ],
       click: ""
@@ -128,7 +152,8 @@ export default {
   },
   components: {
     board,
-    card
+    card,
+    appMyModal: myModal
   },
   created() {
     window.addEventListener("beforeunload", function(e) {
@@ -145,6 +170,9 @@ export default {
       card.style.display = "block";
       e.target.appendChild(card);
     },
+    handleClickButton() {
+      this.visible = !this.visible;
+    },
     handler: function handler(e) {
       e.preventDefault();
       e.returnValue = "";
@@ -152,12 +180,13 @@ export default {
       alert("정말?");
     },
     handle_delect(i) {
+      console.log("선택 인덱스", i);
       console.log("상태", this.delect);
       this.click = i;
-      if (this.delect == false) {
-        this.delect = true;
+      if (this.disabled[i].delect == false) {
+        this.disabled[i].delect = true;
       } else {
-        this.delect = false;
+        this.disabled[i].delect = false;
       }
     },
     handle_cancle() {
@@ -181,6 +210,9 @@ export default {
       } else {
         this.cancle_modal = false;
       }
+    },
+    changeModal(val) {
+      this.visible = val;
     }
   }
 };

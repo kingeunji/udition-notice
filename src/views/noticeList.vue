@@ -81,6 +81,12 @@ export default {
       // 페이지네이션 번호 범위 지정
       let a = this.noticeList[0].noticeCnt;
       this.pageCount = Math.ceil(a / 10);
+
+      for (let i = 0; i < this.noticeList.length; i++) {
+        let a = this.noticeList[i].createDate.substr(0, 10);
+        let b = a.split("-");
+        this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
+      }
     },
     async clickCallback(pageNum) {
       window.scrollTo(0, 0);
