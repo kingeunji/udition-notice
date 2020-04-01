@@ -9,8 +9,9 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.9.5",
+    "cache-loader": "^4.1.0",
     "core-js": "^3.6.4",
-    "cors": "^2.8.5",
+    "node-sass": "^4.13.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vuejs-paginate": "^2.1.0"
@@ -20,13 +21,14 @@
     "@vue/cli-plugin-eslint": "~4.2.0",
     "@vue/cli-service": "~4.2.0",
     "babel-eslint": "^10.0.3",
-    "eslint": "^6.8.0",
     "eslint-plugin-vue": "^7.0.0-alpha.0",
     "node-sass": "^4.13.1",
     "sass-loader": "^8.0.2",
-    "vue-loader": "^15.9.1",
     "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.42.1"
+    "webpack": "^4.42.1",
+    "eslint": "^6.7.2",
+    "vue-loader": "^15.9.1",
+    "vue-svg-loader": "^0.16.0"
   },
   "eslintConfig": {
     "root": true,
