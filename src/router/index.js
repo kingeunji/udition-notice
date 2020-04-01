@@ -1,19 +1,29 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-// 파일 import !
+import noticeList from "../views/noticeList"
+import noticeDetail from "../views/noticeDetail"
+import policy from "../views/policy"
 
 Vue.use(VueRouter);
 
 // route 설정하기
-// export default new VueRouter({
-//     routes: [
-//         {
-//             path: '/',
-//             name: '',
-//             component:
-//         }
-//     ]
-// })
+export default new VueRouter({
+    routes: [
+        {
+            path: '/notice',
+            name: 'notice',
+            component: noticeList
+        },
+        {
+            path: '/notice-detail:id',
+            name: 'notice-detail',
+            component: noticeDetail
+        },
+        {
+            path: '/policy',
+            name: 'policy',
+            component: policy
+        }
+    ]
+})
 
-// router 사용하고 싶은 곳에
-/* <router-view /> 태그 넣기 */
