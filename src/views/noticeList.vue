@@ -20,7 +20,7 @@
         <listDetail :datas="noticeList" />
         <div class="pagination-container">
           <paginate
-            :page-count="20"
+            :page-count="this.pageCount"
             :page-range="3"
             :margin-pages="2"
             :click-handler="clickCallback"
@@ -28,8 +28,7 @@
             :next-text="'>'"
             :container-class="'pagination'"
             :page-class="'page-item'"
-          >
-          </paginate>
+          ></paginate>
         </div>
       </div>
     </div>
@@ -38,9 +37,7 @@
 <script>
 import Paginate from "vuejs-paginate";
 import { listPage } from "../api/index";
-
-import listDetail from "../components/list/listDetail2";
-//import { listPage } from "../../api/index";
+import listDetail from "../components/list/listDetail";
 
 export default {
   name: "noticeList",
@@ -54,7 +51,8 @@ export default {
     return {
       requestPage: 0,
       noticeType: 0,
-      noticeList: []
+      noticeList: [],
+      pageCount: 0
     };
   },
   watch: {
@@ -78,27 +76,25 @@ export default {
 
       // API list(formData);
       const response = await listPage.list(formData);
-      console.log("폼데이타 ", response);
       this.noticeList = response.data.result;
-      console.log("리스트", this.noticeList);
-      window.scrollTo(0, 0);
-      // console.log("페이지넘버", sel);
-      // // listpage는 api -> index.js에서 받아온 변수고, list는 해당 변수 안에 있던 함수.
-      // const res = await listPage.list(sel);
-      // console.log(res);
-      // // 초기값으로 설정한 items에 res.data.object를 담아준다.
-      // this.items = await res.data.result;
-      // console.log("items", this.items);
+      let a = this.noticeList[0].noticeCnt;
+      this.pageCount = Math.ceil(a / 10);
+
+      for (let i = 0; i < this.noticeList.length; i++) {
+        let a = this.noticeList[i].createDate.substr(0, 10);
+        let b = a.split("-");
+        this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
+      }
     },
     async clickCallback(pageNum) {
       window.scrollTo(0, 0);
-      console.log("페이지넘버", pageNum);
       // listpage는 api -> index.js에서 받아온 변수고, list는 해당 변수 안에 있던 함수.
-      const res = await listPage.list(pageNum);
-      console.log(res);
+      let formData = new FormData();
+      formData.append("requestPage", pageNum - 1);
+      formData.append("noticeType", this.noticeType);
+      const res = await listPage.list(formData);
       // 초기값으로 설정한 items에 res.data.object를 담아준다.
-      this.items = await res.data.result;
-      console.log("items", this.items);
+      this.noticeList = await res.data.result;
     }
   }
 };
