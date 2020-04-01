@@ -3,7 +3,7 @@
     <header>
       <h2>약관 관리</h2>
     </header>
-    <div class="container">
+    <div class="policy-container">
       <div class="list">
         <ul class="select-list">
           <li @click="fetchData(1)">
@@ -47,7 +47,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 header {
   padding: 20px 0;
   border-bottom: 1px solid #e5e5e5;
@@ -57,7 +57,7 @@ header {
     font-size: 20px;
   }
 }
-.container {
+.policy-container {
   width: 750px;
   margin: 50px auto;
   display: flex;
