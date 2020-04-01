@@ -1,25 +1,25 @@
 <template>
   <div id="app">
-    <noticeList />
-    <policy />
-    <!-- <policyClassify /> -->
+    <!-- <noticeList />
+    <policy /> -->
+    <policyClassify />
   </div>
 </template>
 
 <script>
-import noticeList from "./views/noticeList";
-// import policyClassify from "./views/policyClassify";
+// import noticeList from "./views/noticeList";
+import policyClassify from "./views/policyClassify";
 // App.use(cors(require("cors")));
 // import noticeDetail from "./views/noticeDetail";
-import policy from "./views/policy";
+// import policy from "./views/policy";
 
 export default {
   name: "App",
   components: {
-    noticeList,
-    // policyClassify
+    // noticeList,
+    policyClassify
     // noticeDetail
-    policy
+    // policy
   }
 };
 </script>
