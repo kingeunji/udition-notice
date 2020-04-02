@@ -57,6 +57,7 @@ export default {
   },
   watch: {
     noticeType() {
+      this.pageCount = 0;
       this.fetchData();
     },
     requestPage() {
@@ -79,8 +80,7 @@ export default {
       this.noticeList = response.data.result;
 
       // 페이지네이션 번호 범위 지정
-      let a = this.noticeList[0].noticeCnt;
-      this.pageCount = Math.ceil(a / 10);
+      this.pageCount = Math.ceil(this.noticeList[0].noticeCnt / 10);
 
       for (let i = 0; i < this.noticeList.length; i++) {
         let a = this.noticeList[i].createDate.substr(0, 10);
