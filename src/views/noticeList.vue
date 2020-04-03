@@ -3,18 +3,10 @@
     <h2>공지사항</h2>
     <div class="list">
       <ul class="select-list">
-        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">
-          전체
-        </li>
-        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">
-          공지
-        </li>
-        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">
-          이벤트
-        </li>
-        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">
-          보도자료
-        </li>
+        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">전체</li>
+        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">공지</li>
+        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">이벤트</li>
+        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">보도자료</li>
       </ul>
       <div class="content-container">
         <listDetail :datas="noticeList" />
@@ -78,15 +70,16 @@ export default {
       const response = await listPage.list(formData);
       this.noticeList = response.data.result;
 
-      // 페이지네이션 번호 범위 지정
-      let a = this.noticeList[0].noticeCnt;
-      this.pageCount = Math.ceil(a / 10);
-
+      // 날짜계산
       for (let i = 0; i < this.noticeList.length; i++) {
         let a = this.noticeList[i].createDate.substr(0, 10);
         let b = a.split("-");
         this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
       }
+
+      // 페이지네이션 번호 범위 지정
+      let a = this.noticeList[0].noticeCnt;
+      this.pageCount = Math.ceil(a / 10);
     },
     async clickCallback(pageNum) {
       window.scrollTo(0, 0);
@@ -95,8 +88,16 @@ export default {
       formData.append("requestPage", pageNum - 1);
       formData.append("noticeType", this.noticeType);
       const res = await listPage.list(formData);
+
       // 초기값으로 설정한 items에 res.data.object를 담아준다.
       this.noticeList = await res.data.result;
+
+      // 날짜계산
+      for (let i = 0; i < this.noticeList.length; i++) {
+        let a = this.noticeList[i].createDate.substr(0, 10);
+        let b = a.split("-");
+        this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
+      }
     }
   }
 };

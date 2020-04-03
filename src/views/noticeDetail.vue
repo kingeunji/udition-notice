@@ -64,7 +64,6 @@ export default {
     };
   },
   created() {
-    console.log(this.$route.params.id);
     this.fetchData();
   },
   methods: {
@@ -76,6 +75,7 @@ export default {
       formData.append("noticeType", type);
       const res = await noticeDetail.list(formData);
       this.content = res.data.result[0];
+      console.log("내용", this.content.tts);
 
       // 날짜 계산
       this.date.push(
@@ -91,9 +91,6 @@ export default {
       }
     },
     goToDetail(num) {
-      console.log(num);
-      // this.count += 1;
-      // console.log(this.count);
       this.$router.push(`/notice-detail:id=${num}=${this.content.noticeType}`);
     }
   }
@@ -141,6 +138,7 @@ section {
     img {
       width: 750px;
       height: auto;
+      margin-bottom: 61px;
 
       &.active {
         display: none;
@@ -148,7 +146,7 @@ section {
     }
 
     .content {
-      margin: 61px 0 24px;
+      margin-bottom: 24px;
     }
 
     .buttons {
