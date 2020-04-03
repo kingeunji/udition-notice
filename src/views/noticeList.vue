@@ -3,15 +3,24 @@
     <h2>공지사항</h2>
     <div class="list">
       <ul class="select-list">
-        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">전체</li>
-        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">공지</li>
-        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">이벤트</li>
-        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">보도자료</li>
+        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">
+          전체
+        </li>
+        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">
+          공지
+        </li>
+        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">
+          이벤트
+        </li>
+        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">
+          보도자료
+        </li>
       </ul>
       <div class="content-container">
         <listDetail :datas="noticeList" />
         <div class="pagination-container">
           <paginate
+            v-model="pageNum"
             :page-count="this.pageCount"
             :page-range="3"
             :margin-pages="2"
@@ -44,12 +53,14 @@ export default {
       requestPage: 0,
       noticeType: 0,
       noticeList: [],
-      pageCount: 0
+      pageCount: 0,
+      pageNum: 0
     };
   },
   watch: {
     noticeType() {
       this.fetchData();
+      this.pageNum = 1;
     },
     requestPage() {
       this.fetchData();
@@ -69,6 +80,9 @@ export default {
       // API list(formData);
       const response = await listPage.list(formData);
       this.noticeList = response.data.result;
+
+      // 페이지네이션 번호 범위 지정
+      this.pageCount = Math.ceil(this.noticeList[0].noticeCnt / 10);
 
       // 날짜계산
       for (let i = 0; i < this.noticeList.length; i++) {
@@ -98,6 +112,7 @@ export default {
         let b = a.split("-");
         this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
       }
+      this.pageNum = pageNum;
     }
   }
 };
