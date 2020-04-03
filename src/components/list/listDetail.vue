@@ -1,11 +1,6 @@
 <template>
   <div class="content">
-    <div
-      @click="goToDetail(data)"
-      v-for="data in datas"
-      :key="data.noticeNo"
-      class="detail"
-    >
+    <div @click="goToDetail(data)" v-for="data in datas" :key="data.noticeNo" class="detail">
       <div class="detail-text">
         <p class="category">{{ noticeType[data.noticeType] }}</p>
         <h3>{{ data.title }}</h3>
@@ -19,7 +14,7 @@
           "
           alt="noticeimg"
           :class="{
-            active: data.image.length > 0 ? image == true : image == false
+            active:  data.image.length > 10 ?  image == true : image == false
           }"
         />
       </div>

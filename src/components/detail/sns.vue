@@ -125,6 +125,7 @@ export default {
       img {
         width: 15px;
         height: 16px;
+        margin-right: 2px;
       }
     }
 

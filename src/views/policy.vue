@@ -5,15 +5,19 @@
       <ul>
         <li
           v-for="(category, i) in categorys"
-          :key="i"
-          @click="selectCategory(i + 1)"
-          :class="{active: i == 0}"
-        >{{ category }}</li>
+          :key="category.id"
+          @click="selectCategory(category.id, i)"
+          :class="{ active: i == 0 }"
+        >{{ category.title }}</li>
       </ul>
     </div>
     <div class="content-container">
       <select id="num" @change="selectTerms()">
-        <option v-for="(version, i) in versions" :key="i" :value="i" selected>{{ version.version }}</option>
+        <option v-for="(version, i) in versions" :key="i" :value="i">
+          {{
+          version.version
+          }}
+        </option>
       </select>
       <div class="content">{{ this.content[this.termsNo].contents }}</div>
     </div>
@@ -30,9 +34,9 @@ export default {
   data() {
     return {
       categorys: [
-        "서비스 이용약관",
-        "유료서비스 이용약관",
-        "개인정보 처리방침"
+        { id: 1, title: "서비스 이용약관" },
+        { id: 2, title: "유료서비스 이용약관" },
+        { id: 3, title: "개인정보 처리방침" }
       ],
       categoryNo: 1,
       termsNo: 0,
@@ -46,23 +50,26 @@ export default {
   watch: {
     categoryNo() {
       this.fetchData();
-    },
-    termsNo() {}
+    }
   },
   methods: {
-    selectCategory: function(i) {
-      this.categoryNo = i;
-      let a = this.categorys.splice(i - 1, 1);
+    selectCategory: function(id, i) {
+      // 카테고리 순서 이동
+      this.categoryNo = id;
+      this.termsNo = 0;
+      let a = this.categorys.splice(i, 1);
       this.categorys.unshift(a[0]);
+      console.log("고유id", id, "지금 위치", i, "termsNo", this.termsNo);
     },
-    // form-data형식으로 데이터를 담아서 백한테 보내준다.
+
+    // 카테고리에 맞는 데이터 호출
     async fetchData() {
-      console.log(this.catrgorys);
       var formData = new FormData();
       formData.append("categoryNo", this.categoryNo);
       const res = await policy.list(formData);
       this.content = res.data.result;
-      // version list data
+
+      // 카테고리에 맞는 버전 데이터 호출
       const resVer = await versionList.list(formData);
       this.versions = resVer.data.result;
     },
@@ -70,7 +77,7 @@ export default {
       var numCheck = document.getElementById("num");
       this.termsNo =
         numCheck.options[document.getElementById("num").selectedIndex].value;
-      console.log("termsNo2", this.termsNo);
+      // console.log("termsNo2", this.termsNo);
     }
   }
 };
