@@ -3,27 +3,54 @@
     <div class="datail-container">
       <div class="section">
         <div class="board-container">
-          <h3>활성화된 분류</h3>
-          <board v-for="item in activation" :key="item.id" class="board-1">
-            <card class="card-1" draggable="true">
-              <p>{{ item.title }} ({{ item.total }})</p>
-            </card>
-          </board>
-          <h3>비활성화 분류</h3>
-          <board v-for="(item, i) in disabled" :key="item.id" class="board-2">
-            <card class="card-2" draggable="true">
-              <p :class="{ refresh: delect == true }" @click="handle_delect(i)">
-                {{ item.title }} ({{ item.total }})
-              </p>
-            </card>
-          </board>
+          <div class="col-3">
+            <h3>활성화된 분류</h3>
+            <draggable
+              class="list-group"
+              :list="list1"
+              group="people"
+              @change="log"
+            >
+              <div
+                class="list-group-item"
+                v-for="(element, index) in list1"
+                :key="element.name"
+              >
+                {{ element.name }} {{ index }}
+              </div>
+            </draggable>
+          </div>
+          <div class="col-3">
+            <h3>비활성화 분류</h3>
+            <draggable
+              class="list-group"
+              :list="list2"
+              group="people"
+              @change="log"
+            >
+              <div
+                class="list-group-item delete"
+                v-for="(element, index) in list2"
+                :key="element.name"
+                :class="{ refresh: element.delete == true }"
+                @click="handle_delete(index)"
+              >
+                {{ element.name }} {{ index }}
+              </div>
+            </draggable>
+          </div>
+          <rawDisplayer class="col-3" :value="list1" title="List 1" />
+
+          <rawDisplayer class="col-3" :value="list2" title="List 2" />
         </div>
       </div>
       <div class="button-container">
         <div class="">
-          <button @click="handle_cancle" class="add btn-style">
-            분류추가
+          <!-- 테스트용 -->
+          <button @click="visible = true" class="add btn-style">
+            분류 추가
           </button>
+          <app-my-modal v-bind:visible="visible" @change="changeModal" />
         </div>
         <div class="modal-save">
           <button @click="handle_save" class="save btn-style">
@@ -31,23 +58,7 @@
           </button>
         </div>
       </div>
-      <!-- 분류 추가 모달 등장-->
-      <div class="cover-bg" v-if="cancle_modal">
-        <div class="bg-white">
-          <div class="text-wrapper">
-            <h3>분류추가</h3>
-            <textarea
-              type="text"
-              placeholder="추가하고 싶은 분류를 입력해주세요."
-              v-model="newTitle"
-            />
-            <div class="button-wrapper">
-              <button class="left-btn" @click="handle_cancle">닫기</button>
-              <button class="right-btn" @click="goToSave">확인</button>
-            </div>
-          </div>
-        </div>
-      </div>
+
       <!-- 저장 모달 등장-->
       <div class="cover-bg" v-if="save_modal">
         <div class="bg-white">
@@ -67,83 +78,49 @@
   </div>
 </template>
 <script>
-import board from "./board";
-import card from "./card";
+import draggable from "vuedraggable";
+import myModal from "./my-modal";
 export default {
-  name: "",
-  props: ["id"],
+  name: "two-lists",
+  display: "Two Lists",
+  order: 1,
   data() {
     return {
       visible: false,
       cancle_modal: false,
       save_modal: false,
       newTitle: "",
-      delect: false,
-      activation: [
-        {
-          id: 1,
-          title: "서비스 이용약관",
-          total: 20
-        },
-        {
-          id: 2,
-          title: "개인정보 처리방침",
-          total: 8
-        },
-        {
-          id: 3,
-          title: "유료서비스 이용약관",
-          total: 10
-        },
-        {
-          id: 4,
-          title: "서비스 이용약관",
-          total: 20
-        }
+      delete: false,
+      list1: [
+        { name: "John", id: 1, delete: false },
+        { name: "Joao", id: 2, delete: false },
+        { name: "Jean", id: 3, delete: false },
+        { name: "Gerard", id: 4, delete: false }
       ],
-      disabled: [
-        {
-          id: 1,
-          title: "kkkkk",
-          total: 3
-        },
-        {
-          id: 2,
-          title: "개인정보 처리방침",
-          total: 8
-        },
-        {
-          id: 3,
-          title: "유료서비스 이용약관",
-          total: 10
-        },
-        {
-          id: 4,
-          title: "서비스 이용약관",
-          total: 20
-        }
+      list2: [
+        { name: "Juan", id: 5, delete: false },
+        { name: "Edgard", id: 6, delete: false },
+        { name: "Johnson", id: 7, delete: false }
       ],
       click: ""
     };
   },
   components: {
-    board,
-    card
+    appMyModal: myModal,
+    draggable
   },
   created() {
     window.addEventListener("beforeunload", function(e) {
-      // Cancel the event
-      e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-      // Chrome requires returnValue to be set
+      e.preventDefault();
       e.returnValue = "";
     });
   },
   methods: {
-    drop: e => {
-      const card_id = e.dataTransfer.getData("card_id");
-      const card = document.getElementById(card_id);
-      card.style.display = "block";
-      e.target.appendChild(card);
+    log: function(evt) {
+      window.console.log(evt);
+    },
+    handleClickButton() {
+      this.visible = !this.visible;
     },
     handler: function handler(e) {
       e.preventDefault();
@@ -151,20 +128,14 @@ export default {
       console.log(event);
       alert("정말?");
     },
-    handle_delect(i) {
-      console.log("상태", this.delect);
+    handle_delete(i) {
+      console.log("선택 인덱스", i);
+      console.log("상태", this.delete);
       this.click = i;
-      if (this.delect == false) {
-        this.delect = true;
+      if (this.list2[i].delete == false) {
+        this.list2[i].delete = true;
       } else {
-        this.delect = false;
-      }
-    },
-    handle_cancle() {
-      if (this.cancle_modal == false) {
-        this.cancle_modal = true;
-      } else {
-        this.cancle_modal = false;
+        this.list2[i].delete = false;
       }
     },
     handle_save() {
@@ -174,13 +145,8 @@ export default {
         this.save_modal = false;
       }
     },
-    goToSave() {
-      console.log("타이틀", this.newTitle);
-      if (this.cancle_modal == false) {
-        this.cancle_modal = true;
-      } else {
-        this.cancle_modal = false;
-      }
+    changeModal(val) {
+      this.visible = val;
     }
   }
 };
@@ -193,47 +159,31 @@ export default {
 
   .section {
     .board-container {
-      background: red;
       h3 {
         margin-bottom: 20px;
       }
 
-      p {
-        position: relative;
+      .col-3:nth-child(2) {
+        h3 {
+          margin-top: 20px;
+        }
+      }
+      .list-group-item {
         margin-bottom: 15px;
         padding: 10px;
         border: 1px solid #333;
         cursor: pointer;
-      }
+        background-size: 20px 20px;
 
-      .board-2 {
-        background: yellow;
-        p {
+        &.delete {
           background: url("../../assets/images/policy/close_r.png") no-repeat
-            95% center;
-          background-size: 20px 20px;
-
-          &.refresh {
-            background: url("../../assets/images/policy/refresh.png") no-repeat
-              95% center;
-            text-decoration: line-through;
-          }
+            96% center;
         }
-      }
-    }
 
-    .activation {
-    }
-    .disabled {
-      margin-top: 50px;
-
-      ul {
-        li {
-          position: relative;
-          span {
-            position: absolute;
-            right: 10px;
-          }
+        &.refresh {
+          background: url("../../assets/images/policy/refresh.png") no-repeat
+            96% center;
+          text-decoration: line-through;
         }
       }
     }

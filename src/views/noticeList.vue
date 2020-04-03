@@ -20,6 +20,7 @@
         <listDetail :datas="noticeList" />
         <div class="pagination-container">
           <paginate
+            v-model="pageNum"
             :page-count="this.pageCount"
             :page-range="3"
             :margin-pages="2"
@@ -52,12 +53,14 @@ export default {
       requestPage: 0,
       noticeType: 0,
       noticeList: [],
-      pageCount: 0
+      pageCount: 0,
+      pageNum: 0
     };
   },
   watch: {
     noticeType() {
       this.fetchData();
+      this.pageNum = 1;
     },
     requestPage() {
       this.fetchData();
@@ -79,8 +82,13 @@ export default {
       this.noticeList = response.data.result;
 
       // 페이지네이션 번호 범위 지정
-      let a = this.noticeList[0].noticeCnt;
-      this.pageCount = Math.ceil(a / 10);
+      this.pageCount = Math.ceil(this.noticeList[0].noticeCnt / 10);
+
+      for (let i = 0; i < this.noticeList.length; i++) {
+        let a = this.noticeList[i].createDate.substr(0, 10);
+        let b = a.split("-");
+        this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
+      }
     },
     async clickCallback(pageNum) {
       window.scrollTo(0, 0);
@@ -91,6 +99,7 @@ export default {
       const res = await listPage.list(formData);
       // 초기값으로 설정한 items에 res.data.object를 담아준다.
       this.noticeList = await res.data.result;
+      this.pageNum = pageNum;
     }
   }
 };
