@@ -20,6 +20,7 @@
         <listDetail :datas="noticeList" />
         <div class="pagination-container">
           <paginate
+            v-model="pageNum"
             :page-count="this.pageCount"
             :page-range="3"
             :margin-pages="2"
@@ -52,13 +53,14 @@ export default {
       requestPage: 0,
       noticeType: 0,
       noticeList: [],
-      pageCount: 0
+      pageCount: 0,
+      pageNum: 0
     };
   },
   watch: {
     noticeType() {
-      this.pageCount = 0;
       this.fetchData();
+      this.pageNum = 1;
     },
     requestPage() {
       this.fetchData();
@@ -97,6 +99,7 @@ export default {
       const res = await listPage.list(formData);
       // 초기값으로 설정한 items에 res.data.object를 담아준다.
       this.noticeList = await res.data.result;
+      this.pageNum = pageNum;
     }
   }
 };
