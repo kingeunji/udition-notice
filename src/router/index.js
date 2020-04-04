@@ -1,9 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import noticeList from "../views/noticeList"
-import noticeDetail from "../views/noticeDetail"
-import policy from "../views/policy"
-import policyClassify from "../views/policyClassify"
+import noticeList from "@/views/noticeList"
+import noticeDetail from "@/views/noticeDetail"
+import policy from "@/views/policy"
+import policyClassify from "@/views/policyClassify"
 
 Vue.use(VueRouter);
 
@@ -20,6 +20,11 @@ export default new VueRouter({
             path: '/notice-detail:id',
             name: 'notice-detail',
             component: noticeDetail
+        },
+        {
+            path: '/notice-detail/:id/:type',
+            name : 'detail',
+            component: noticeDetail,
         },
         {
             path: '/policy',

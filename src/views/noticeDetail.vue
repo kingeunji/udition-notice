@@ -2,7 +2,9 @@
   <section id="detail">
     <div class="top">
       <div class="top-title">{{ content.title }}</div>
-      <div class="top-date">{{ this.newDate[0] }}</div>
+      <div class="top-date">
+        {{ this.content.createDate && convertToDate(this.content.createDate) }}
+      </div>
     </div>
     <div class="content-container">
       <img
@@ -30,19 +32,36 @@
       </div>
       <div class="bottom-list" @click="goToDetail(content.preNoticeNo1)">
         {{ this.content.preTitle1 }}
-        <div>{{ this.newDate[1] }}</div>
+        <div>
+          {{
+            this.content.preNoticeNo1 &&
+              convertToDate(this.content.preCreateDate1)
+          }}
+        </div>
       </div>
       <div class="bottom-list" @click="goToDetail(content.preNoticeNo2)">
         {{ this.content.preTitle2 }}
-        <div>{{ this.newDate[2] }}</div>
+        <div>
+          {{
+            this.content.preNoticeNo2 &&
+              convertToDate(this.content.preCreateDate2)
+          }}
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import { noticeDetail } from "../api/index";
-import sns from "../components/detail/sns";
+import Vue from "vue";
+import VueQuillEditor from "vue-quill-editor";
+import "quill/dist/quill.core.css";
+// import "quill/dist/quill.snow.css";
+// import "quill/dist/quill.bubble.css";
+Vue.use(VueQuillEditor);
+
+import { noticeDetail } from "@/api/index";
+import sns from "@/components/detail/sns";
 
 export default {
   name: "noticeDetail",
@@ -68,30 +87,21 @@ export default {
   },
   methods: {
     async fetchData() {
-      let id = this.$route.params.id.split("=")[1];
-      let type = this.$route.params.id.split("=")[2];
+      let id = this.$route.params.id;
+      let type = this.$route.params.type;
       var formData = new FormData();
       formData.append("noticeNo", id);
       formData.append("noticeType", type);
       const res = await noticeDetail.list(formData);
       this.content = res.data.result[0];
       console.log("내용", this.content.tts);
-
-      // 날짜 계산
-      this.date.push(
-        this.content.createDate,
-        this.content.preCreateDate1,
-        this.content.preCreateDate2
-      );
-
-      for (let i = 0; i < this.date.length; i++) {
-        let a = this.date[i].substr(0, 10);
-        let b = a.split("-");
-        this.newDate.push(b[0] + "." + b[1] + "." + b[2]);
-      }
+    },
+    convertToDate(date) {
+      return new Date(date).toISOString().slice(0, 10);
     },
     goToDetail(num) {
-      this.$router.push(`/notice-detail:id=${num}=${this.content.noticeType}`);
+      let type = this.content.noticeType;
+      this.$router.push({ name: "detail", params: { id: num, type: type } });
     }
   }
 };

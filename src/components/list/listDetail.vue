@@ -1,10 +1,15 @@
 <template>
   <div class="content">
-    <div @click="goToDetail(data)" v-for="data in datas" :key="data.noticeNo" class="detail">
+    <div
+      @click="goToDetail(data)"
+      v-for="data in datas"
+      :key="data.noticeNo"
+      class="detail"
+    >
       <div class="detail-text">
         <p class="category">{{ noticeType[data.noticeType] }}</p>
         <h3>{{ data.title }}</h3>
-        <p class="date">{{ data.createDate }}</p>
+        <p class="date">{{ convertToDate(data.createDate) }}</p>
       </div>
       <div class="detail-img">
         <img
@@ -14,7 +19,7 @@
           "
           alt="noticeimg"
           :class="{
-            active:  data.image.length > 10 ?  image == true : image == false
+            active: data.image.length > 10 ? image == true : image == false
           }"
         />
       </div>
@@ -49,7 +54,10 @@ export default {
     goToDetail(data) {
       let num = data.noticeNo;
       let type = data.noticeType;
-      this.$router.push(`/notice-detail:id=${num}=${type}`);
+      this.$router.push({ name: "detail", params: { id: num, type: type } });
+    },
+    convertToDate(date) {
+      return new Date(date).toISOString().slice(0, 10);
     }
   }
 };
