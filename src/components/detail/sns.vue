@@ -1,22 +1,22 @@
 <template>
   <div class="icon-container">
     <div class="twitter" @click="shareSNS(data, 1)">
-      <img src="../../assets/images/sns/twitter.png" alt="twitter" />
+      <img src="@/assets/images/sns/twitter.png" alt="twitter" />
     </div>
     <div class="naver" @click="shareSNS(data, 2)">
-      <img src="../../assets/images/sns/naver.png" alt="naver" />
+      <img src="@/assets/images/sns/naver.png" alt="naver" />
     </div>
     <div class="line" @click="shareLine(data)">
-      <img src="../../assets/images/sns/line.png" alt="line" />
+      <img src="@/assets/images/sns/line.png" alt="line" />
     </div>
     <div class="kakao">
-      <img src="../../assets/images/sns/kakao.png" alt="kakao" />
+      <img src="@/assets/images/sns/kakao.png" alt="kakao" />
     </div>
     <div class="facebook" @click="ShareFacebook(data)">
-      <img src="../../assets/images/sns/facebook.png" alt="facebook" />
+      <img src="@/assets/images/sns/facebook.png" alt="facebook" />
     </div>
     <div class="share">
-      <img src="../../assets/images/sns/share.png" alt="share" />
+      <img src="@/assets/images/sns/share.png" alt="share" />
     </div>
   </div>
 </template>

@@ -8,15 +8,15 @@
           :key="category.id"
           @click="selectCategory(category.id, i)"
           :class="{ active: i == 0 }"
-        >{{ category.title }}</li>
+        >
+          {{ category.title }}
+        </li>
       </ul>
     </div>
     <div class="content-container">
-      <select id="num" @change="selectTerms()">
+      <select v-model="termsNo">
         <option v-for="(version, i) in versions" :key="i" :value="i">
-          {{
-          version.version
-          }}
+          {{ version.version }}
         </option>
       </select>
       <div class="content">{{ this.content[this.termsNo].contents }}</div>
@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import { policy } from "../api/index";
-import { versionList } from "../api/index";
+import { policy } from "@/api/index";
+import { versionList } from "@/api/index";
 
 export default {
   name: "policy",
@@ -53,13 +53,15 @@ export default {
     }
   },
   methods: {
+    // 카테고리 순서 이동
     selectCategory: function(id, i) {
-      // 카테고리 순서 이동
+      // 클릭한 카테고리의 세부 내역 데이터를 가져오기 위해서 id값을 categoryNo에 저장
       this.categoryNo = id;
+      // 카테고리 넘어갔을 때, 버전리스트 초기화
       this.termsNo = 0;
+      // 클릭한 카테고리 자르고 unshift로 카테고리 배열 앞에 추가
       let a = this.categorys.splice(i, 1);
       this.categorys.unshift(a[0]);
-      console.log("고유id", id, "지금 위치", i, "termsNo", this.termsNo);
     },
 
     // 카테고리에 맞는 데이터 호출
@@ -72,12 +74,6 @@ export default {
       // 카테고리에 맞는 버전 데이터 호출
       const resVer = await versionList.list(formData);
       this.versions = resVer.data.result;
-    },
-    selectTerms: function() {
-      var numCheck = document.getElementById("num");
-      this.termsNo =
-        numCheck.options[document.getElementById("num").selectedIndex].value;
-      // console.log("termsNo2", this.termsNo);
     }
   }
 };

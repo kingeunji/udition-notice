@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-import classifyDetail from "../components/classify/classifyDetail";
+import classifyDetail from "@/components/classify/classifyDetail";
 
 export default {
   name: "",

@@ -37,8 +37,8 @@
 </template>
 <script>
 import Paginate from "vuejs-paginate";
-import { listPage } from "../api/index";
-import listDetail from "../components/list/listDetail";
+import { listPage } from "@/api/index";
+import listDetail from "@/components/list/listDetail";
 
 export default {
   name: "noticeList",
@@ -60,6 +60,7 @@ export default {
   watch: {
     noticeType() {
       this.fetchData();
+      this.requestPage = 0;
       this.pageNum = 1;
     },
     requestPage() {
@@ -83,35 +84,24 @@ export default {
 
       // 페이지네이션 번호 범위 지정
       this.pageCount = Math.ceil(this.noticeList[0].noticeCnt / 10);
-
-      // 날짜계산
-      for (let i = 0; i < this.noticeList.length; i++) {
-        let a = this.noticeList[i].createDate.substr(0, 10);
-        let b = a.split("-");
-        this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
-      }
-
-      // 페이지네이션 번호 범위 지정
-      let a = this.noticeList[0].noticeCnt;
-      this.pageCount = Math.ceil(a / 10);
     },
     async clickCallback(pageNum) {
       window.scrollTo(0, 0);
+      this.requestPage = pageNum - 1;
+      this.fetchData();
+
       // listpage는 api -> index.js에서 받아온 변수고, list는 해당 변수 안에 있던 함수.
-      let formData = new FormData();
-      formData.append("requestPage", pageNum - 1);
-      formData.append("noticeType", this.noticeType);
-      const res = await listPage.list(formData);
+      // let formData = new FormData();
+      // formData.append("requestPage", pageNum - 1);
+      // formData.append("noticeType", this.noticeType);
+      // const res = await listPage.list(formData);
+      // // 초기값으로 설정한 items에 res.data.object를 담아준다.
+      // this.noticeList = await res.data.result;
 
-      // 초기값으로 설정한 items에 res.data.object를 담아준다.
-      this.noticeList = await res.data.result;
-
-      // 날짜계산
-      for (let i = 0; i < this.noticeList.length; i++) {
-        let a = this.noticeList[i].createDate.substr(0, 10);
-        let b = a.split("-");
-        this.noticeList[i].createDate = b[0] + "." + b[1] + "." + b[2];
-      }
+      // // 날짜계산
+      // for (let i = 0; i < this.noticeList.length; i++) {
+      //   date(this.noticeList[i]);
+      // }
       this.pageNum = pageNum;
     }
   }
