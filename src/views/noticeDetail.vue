@@ -2,9 +2,7 @@
   <section id="detail">
     <div class="top">
       <div class="top-title">{{ content.title }}</div>
-      <div class="top-date">
-        {{ this.content.createDate && convertToDate(this.content.createDate) }}
-      </div>
+      <div class="top-date">{{ this.content.createDate && convertToDate(this.content.createDate) }}</div>
     </div>
     <div class="content-container">
       <img
@@ -17,7 +15,7 @@
           active: content.image.length > 0 ? image == true : image == false
         }"
       />
-      <div class="content" v-html="content.tts"></div>
+      <div class="ql-editor" v-html="content.tts"></div>
       <div class="buttons">
         <button>
           <router-link to="/notice">목록으로</router-link>
@@ -34,8 +32,8 @@
         {{ this.content.preTitle1 }}
         <div>
           {{
-            this.content.preNoticeNo1 &&
-              convertToDate(this.content.preCreateDate1)
+          this.content.preNoticeNo1 &&
+          convertToDate(this.content.preCreateDate1)
           }}
         </div>
       </div>
@@ -43,8 +41,8 @@
         {{ this.content.preTitle2 }}
         <div>
           {{
-            this.content.preNoticeNo2 &&
-              convertToDate(this.content.preCreateDate2)
+          this.content.preNoticeNo2 &&
+          convertToDate(this.content.preCreateDate2)
           }}
         </div>
       </div>
@@ -55,10 +53,10 @@
 <script>
 import Vue from "vue";
 import VueQuillEditor from "vue-quill-editor";
-import "quill/dist/quill.core.css";
-// import "quill/dist/quill.snow.css";
-// import "quill/dist/quill.bubble.css";
+// import Quill from "quill";
+
 Vue.use(VueQuillEditor);
+// Vue.use(Quill);
 
 import { noticeDetail } from "@/api/index";
 import sns from "@/components/detail/sns";
@@ -155,8 +153,46 @@ section {
       }
     }
 
-    .content {
+    .ql-editor {
       margin-bottom: 24px;
+
+      h1 {
+        strong {
+          font-weight: bold;
+          /* em {
+          } */
+        }
+      }
+
+      /* .ql-editor strong em u {
+        font-style: italic;
+        font-weight: bold;
+        border-bottom: 1px solid black;
+      }
+      .ql-editor strong em {
+        font-style: italic;
+        font-weight: bold;
+      }
+      .ql-editor strong u {
+        font-weight: bold;
+        border-bottom: 1px solid black;
+      }
+      .ql-editor em u {
+        font-style: italic;
+        border-bottom: 1px solid black;
+      }
+      strong {
+        font-weight: bold;
+      }
+      .ql-editor em {
+        font-style: italic;
+      }
+      .ql-editor u {
+        border-bottom: 1px solid black;
+      }
+      .quill-editor {
+        height: 500px;
+      } */
     }
 
     .buttons {
