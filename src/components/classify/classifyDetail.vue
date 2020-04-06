@@ -5,73 +5,41 @@
         <div class="board-container">
           <div class="col-3">
             <h3>활성화된 분류</h3>
-            <draggable
-              class="list-group"
-              :list="list1"
-              group="people"
-              @change="log"
-            >
+            <draggable class="list-group" :list="list1" group="people" @change="log">
               <div
                 class="list-group-item"
-                v-for="(element, index) in list1"
-                :key="element.name"
-              >
-                {{ element.name }} {{ index }}
-              </div>
+                v-for="(element) in list1"
+                :key="element.categoryName"
+              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
             </draggable>
           </div>
           <div class="col-3">
             <h3>비활성화 분류</h3>
-            <draggable
-              class="list-group"
-              :list="list2"
-              group="people"
-              @change="log"
-            >
+            <draggable class="list-group" :list="list2" group="people" @change="log">
               <div
                 class="list-group-item delete"
                 v-for="(element, index) in list2"
-                :key="element.name"
-                :class="{ refresh: element.delete == true }"
+                :key="element.categoryName"
+                :class="{ refresh: element.deleteBoo == true }"
                 @click="handle_delete(index)"
-              >
-                {{ element.name }} {{ index }}
-              </div>
+              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
             </draggable>
           </div>
-          <rawDisplayer class="col-3" :value="list1" title="List 1" />
-
-          <rawDisplayer class="col-3" :value="list2" title="List 2" />
         </div>
       </div>
       <div class="button-container">
-        <div class="">
-          <!-- 테스트용 -->
-          <button @click="visible = true" class="add btn-style">
-            분류 추가
-          </button>
-          <app-my-modal v-bind:visible="visible" @change="changeModal" />
+        <div>
+          <button @click="visible = true" class="add btn-style">분류 추가</button>
+          <app-my-modal v-bind:visible="visible" @change="changeModal" :datas="contents.length" />
         </div>
-        <div class="modal-save">
-          <button @click="handle_save" class="save btn-style">
-            저장
-          </button>
-        </div>
-      </div>
-
-      <!-- 저장 모달 등장-->
-      <div class="cover-bg" v-if="save_modal">
-        <div class="bg-white">
-          <div class="text-wrapper">
-            <p>
-              <strong>분류 삭제</strong>는 되돌릴 수 없습니다. <br />정말
-              진행하시겠습니까?
-            </p>
-            <div class="button-wrapper">
-              <button class="left-btn" @click="handle_save">보류</button>
-              <button class="right-btn">확인</button>
-            </div>
-          </div>
+        <div>
+          <button @click="visible_save = true" class="save btn-style">저장</button>
+          <saveModal
+            v-bind:visible="visible_save"
+            @change="changeSaveModal"
+            @save="goToSave"
+            :datas="contents"
+          />
         </div>
       </div>
     </div>
@@ -80,6 +48,10 @@
 <script>
 import draggable from "vuedraggable";
 import myModal from "./my-modal";
+import saveModal from "./saveModal";
+import { classify } from "@/api/index";
+import { classifyUpdate } from "@/api/index";
+
 export default {
   name: "two-lists",
   display: "Two Lists",
@@ -87,66 +59,68 @@ export default {
   data() {
     return {
       visible: false,
-      cancle_modal: false,
-      save_modal: false,
+      visible_save: false,
       newTitle: "",
       delete: false,
-      list1: [
-        { name: "John", id: 1, delete: false },
-        { name: "Joao", id: 2, delete: false },
-        { name: "Jean", id: 3, delete: false },
-        { name: "Gerard", id: 4, delete: false }
-      ],
-      list2: [
-        { name: "Juan", id: 5, delete: false },
-        { name: "Edgard", id: 6, delete: false },
-        { name: "Johnson", id: 7, delete: false }
-      ],
-      click: ""
+      list1: [],
+      list2: [],
+      contents: [],
+      click: "",
+      categoryName: ""
     };
   },
   components: {
     appMyModal: myModal,
+    saveModal,
     draggable
   },
   created() {
-    window.addEventListener("beforeunload", function(e) {
-      e.preventDefault();
-      e.returnValue = "";
-    });
+    window.addEventListener("beforeunload", this.handleBrowser);
+    this.fetchData();
   },
   methods: {
-    log: function(evt) {
-      window.console.log(evt);
-    },
-    handleClickButton() {
-      this.visible = !this.visible;
-    },
-    handler: function handler(e) {
+    handleBrowser: function handleBrowser(e) {
       e.preventDefault();
       e.returnValue = "";
-      console.log(event);
-      alert("정말?");
+    },
+    async fetchData() {
+      const res = await classify.list();
+      this.contents = res.data.result;
+      console.log("데이터", this.contents);
+
+      for (var i = 0; i < this.contents.length; i++) {
+        if (this.contents[i].isDelete == 0) {
+          this.list1.push(this.contents[i]);
+        } else if (this.contents[i].isDelete == 1) {
+          this.list2.push(this.contents[i]);
+        }
+      }
+    },
+    async goToSave(val) {
+      var formData = new FormData();
+      formData.set("categoryName", this.datas);
+
+      const res = await classifyUpdate.list(formData);
+
+      console.log(res);
+
+      this.visible_save = val;
     },
     handle_delete(i) {
       console.log("선택 인덱스", i);
-      console.log("상태", this.delete);
+      console.log("상태", this.deleteBoo);
       this.click = i;
-      if (this.list2[i].delete == false) {
-        this.list2[i].delete = true;
+      if (this.list2[i].deleteBoo == false) {
+        this.list2[i].deleteBoo = true;
       } else {
-        this.list2[i].delete = false;
-      }
-    },
-    handle_save() {
-      if (this.save_modal == false) {
-        this.save_modal = true;
-      } else {
-        this.save_modal = false;
+        this.list2[i].deleteBoo = false;
       }
     },
     changeModal(val) {
       this.visible = val;
+    },
+    changeSaveModal(val) {
+      this.visible_save = val;
     }
   }
 };
@@ -155,6 +129,7 @@ export default {
 <style lang="scss">
 .datail-container {
   width: 500px;
+  height: auto;
   margin: 0 auto;
 
   .section {
@@ -173,7 +148,7 @@ export default {
         padding: 10px;
         border: 1px solid #333;
         cursor: pointer;
-        background-size: 20px 20px;
+        background-size: 15px 15px;
 
         &.delete {
           background: url("../../assets/images/policy/close_r.png") no-repeat
@@ -206,64 +181,6 @@ export default {
       &:hover {
         background: #e5e5e5;
         font-weight: 700;
-      }
-    }
-  }
-  .cover-bg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.7);
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    .bg-white {
-      background-color: white;
-      padding: 20px;
-      width: 350px;
-      border-radius: 5px;
-      .text-wrapper {
-        text-align: center;
-        font-size: 18px;
-        padding: 15px;
-
-        h3 {
-          margin-bottom: 30px;
-        }
-
-        p {
-          margin: 30px 0;
-          strong {
-            font-weight: bold;
-          }
-        }
-
-        textarea {
-          padding: 3px;
-          width: 250px;
-          height: 100px;
-          resize: none;
-          font-size: 18px;
-        }
-
-        .button-wrapper {
-          margin: 10px 0 30px 0;
-          padding: 0 15px;
-          display: flex;
-          justify-content: space-between;
-
-          button {
-            width: 60px;
-            line-height: 30px;
-            font-size: 15px;
-            background: #f3f3f3;
-            border: none;
-            border: 1px solid #333;
-            cursor: pointer;
-          }
-        }
       }
     }
   }

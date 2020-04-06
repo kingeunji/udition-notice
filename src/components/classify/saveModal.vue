@@ -1,13 +1,16 @@
 <template>
-  <div class="newTitle">
-    <div class="cover-bg" v-if="modalPlug">
+  <div>
+    <div class="cover-bg" v-if="modalPlugSave">
       <div class="bg-white">
         <div class="text-wrapper">
-          <h3>분류추가</h3>
-          <textarea type="text" placeholder="추가하고 싶은 분류를 입력해주세요." v-model="newTitle" />
+          <p>
+            <strong>분류 삭제</strong>는 되돌릴 수 없습니다.
+            <br />정말
+            진행하시겠습니까?
+          </p>
           <div class="button-wrapper">
             <button class="left-btn" @click="closeModal">닫기</button>
-            <button class="right-btn" @click="goToAdd">확인</button>
+            <button class="right-btn" @click="goToSave">확인</button>
           </div>
         </div>
       </div>
@@ -16,10 +19,10 @@
 </template>
 
 <script>
-import { classifyUpdate } from "@/api/index";
+// import { classifyUpdate } from "@/api/index";
 
 export default {
-  name: "newTitle",
+  name: "my-modal",
   props: {
     visible: {
       type: Boolean,
@@ -34,13 +37,12 @@ export default {
   },
   data() {
     return {
-      modalPlug: this.visible,
-      newTitle: ""
+      modalPlugSave: this.visible_save
     };
   },
   watch: {
     visible(val) {
-      this.modalPlug = val;
+      this.modalPlugSave = val;
     }
   },
   methods: {
@@ -49,64 +51,27 @@ export default {
     //   this.$emit("update:visible", false);
     // },
     closeModal() {
-      this.modalPlug = false;
+      this.modalPlugSave = false;
       this.$emit("change", false);
     },
-    async goToAdd() {
-      var formData = new FormData();
-      formData.set("categoryName", this.newTitle);
-      formData.set("status", 0);
-      formData.set("isDelete", 1);
-      formData.set("sortNo", this.datas);
+    goToSave() {
+      // var formData = new FormData();
+      // formData.set("categoryName", this.datas);
 
-      const res = await classifyUpdate.list(formData);
-      console.log("내용", this.newTitle);
-      console.log("보내는 데이터", res);
-      console.log("프롭스값", this.datas);
-      this.modalPlug = false;
-      this.$emit("change", false);
+      // const res = await classifyUpdate.list(formData);
+
+      // console.log(res);
+      // this.modalPlugSave = false;
+      // this.$emit("change", false);
+
+      this.modalPlugSave = false;
+      this.$emit("save", false);
     }
   }
 };
 </script>
 
 <style lang="scss">
-$module: "my-modal";
-.#{$module} {
-  // This is modal bg
-  background-color: rgba(0, 0, 0, 0.7);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  overflow: auto;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  //This is modal layer
-  &__dialog {
-    width: 500px;
-    position: absolute;
-    background: #fff;
-    margin-bottom: 50px;
-  }
-
-  &__header {
-    font-size: 28px;
-    font-weight: bold;
-    line-height: 1.29;
-    padding: 16px 16px 0 25px;
-    position: relative;
-  }
-  &__body {
-    padding: 25px;
-    min-height: 150px;
-    max-height: 412px;
-    overflow-y: scroll;
-  }
-}
 .cover-bg {
   display: flex;
   align-items: center;
