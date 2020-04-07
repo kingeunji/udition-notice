@@ -8,7 +8,6 @@
             type="text"
             placeholder="추가하고 싶은 분류를 입력해주세요."
             v-model="newTitle"
-            value=""
           />
           <div class="button-wrapper">
             <button class="left-btn" @click="closeModal">닫기</button>
