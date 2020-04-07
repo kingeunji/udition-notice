@@ -50,7 +50,7 @@ export default {
 <style lang="scss" scoped>
 .all-container {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
   overflow: scroll;
 

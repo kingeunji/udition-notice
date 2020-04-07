@@ -15,14 +15,17 @@
           </div>
           <div class="col-3">
             <h3>비활성화 분류</h3>
-            <draggable class="list-group" :list="list2" group="people" @change="log">
+            <draggable class="list-group" :list="list2" group="people">
               <div
                 class="list-group-item delete"
                 v-for="(element, i) in list2"
                 :key="element.categoryName"
                 :class="{ refresh: element.deleteBoo == true }"
                 @click="handle_delete(element, i)"
-              >{{ element.categoryName }} ({{ element.termsCnt }}) {{list1.length + i + 1}}</div>
+              >
+                {{ element.categoryName }} ({{ element.termsCnt }})
+                {{ list1.length + i + 1 }}
+              </div>
             </draggable>
           </div>
         </div>
@@ -50,7 +53,6 @@ import myModal from "./my-modal";
 import saveModal from "./saveModal";
 import { classify } from "@/api/index";
 import { classifyUpdate } from "@/api/index";
-
 export default {
   name: "two-lists",
   display: "Two Lists",
@@ -90,7 +92,6 @@ export default {
       const res = await classify.list();
       this.contents = res.data.result;
       // console.log("데이터", this.contents);
-
       for (var i = 0; i < this.contents.length; i++) {
         if (this.contents[i].isDelete == 0) {
           this.list1.push(this.contents[i]);
@@ -101,18 +102,16 @@ export default {
     },
     async goToSave(val) {
       for (let i = 0; i < this.modify.length; i++) {
+        console.log(this.modify[i].categoryNo);
         var formData = new FormData();
         formData.set("categoryNo", this.modify[i].categoryNo);
         formData.set("status", this.modify[i].status);
         const res = await classifyUpdate.list(formData);
-        if (res.status == 200) {
-          window.location.reload();
-          alert("삭제 완료");
-        }
-
         console.log(res);
       }
 
+      window.location.reload();
+      alert("삭제 완료");
       this.visible_save = val;
     },
     // 이미지 토글버튼
@@ -120,7 +119,12 @@ export default {
       // console.log("i", i);
       const { list2, modify } = this;
       console.log("deleteBoo 전", this.list2[i].deleteBoo);
-      list2[i].deleteBoo = !list2[i].deleteBoo;
+      if (list2[i].deleteBoo == true) {
+        list2[i].deleteBoo = false;
+      } else {
+        list2[i].deleteBoo = true;
+      }
+      // list2[i].deleteBoo = !list2[i].deleteBoo;
       console.log("deleteBoo 후", this.list2[i].deleteBoo);
       if (list2[i].deleteBoo) {
         modify.push({
@@ -128,14 +132,14 @@ export default {
           status: 2,
           sortNo: i
         });
-        console.log("수정", modify);
+        console.log("수정", modify, i);
       } else {
         // sortNo로 클릭한 객체를 modify 배열에서 찾아야해
-        // for (let idx = 0; idx < modify.length; idx++) {
-        //   console.log("sortNo", modify[idx].sortNo, "i", i);
-        //   // idx는 배열의 index, i는 전체 contents에서 클릭한 항목
-        //   return (modify[idx].sortNo = i && modify.splice(idx + 1, 1));
-        // }
+        for (let idx = 0; idx < modify.length; idx++) {
+          console.log("sortNo", modify[idx].sortNo, "i", i);
+          // idx는 배열의 index, i는 전체 contents에서 클릭한 항목
+          // return (modify[idx].sortNo = i && modify.splice(idx + 1, 1));
+        }
         console.log("최종적으로 보낼 데이터", modify);
       }
     },
@@ -144,26 +148,23 @@ export default {
     },
     changeSaveModal(val) {
       this.visible_save = val;
-      d;
     }
   }
 };
 </script>
-
 <style lang="scss">
 .datail-container {
   width: 500px;
   margin: 0 auto;
-
   .section {
     .board-container {
       h3 {
         margin-bottom: 20px;
+        font-weight: bold;
       }
-
       .col-3:nth-child(2) {
         h3 {
-          margin-top: 20px;
+          margin-top: 40px;
         }
       }
       .list-group-item {
@@ -172,12 +173,10 @@ export default {
         border: 1px solid #333;
         cursor: pointer;
         background-size: 15px 15px;
-
         &.delete {
           background: url("../../assets/images/policy/close_r.png") no-repeat
             96% center;
         }
-
         &.refresh {
           background: url("../../assets/images/policy/refresh.png") no-repeat
             96% center;
@@ -186,12 +185,10 @@ export default {
       }
     }
   }
-
   .button-container {
     margin-top: 20px;
     display: flex;
     justify-content: space-between;
-
     .btn-style {
       width: 100px;
       padding: 10px 0;
@@ -200,7 +197,6 @@ export default {
       background: none;
       font-size: 13px;
       cursor: pointer;
-
       &:hover {
         background: #e5e5e5;
         font-weight: 700;

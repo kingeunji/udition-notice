@@ -55,15 +55,6 @@ export default {
       this.$emit("change", false);
     },
     goToSave() {
-      // var formData = new FormData();
-      // formData.set("categoryName", this.datas);
-
-      // const res = await classifyUpdate.list(formData);
-
-      // console.log(res);
-      // this.modalPlugSave = false;
-      // this.$emit("change", false);
-
       this.modalPlugSave = false;
       this.$emit("save", false);
     }

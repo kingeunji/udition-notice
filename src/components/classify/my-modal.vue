@@ -4,7 +4,11 @@
       <div class="bg-white">
         <div class="text-wrapper">
           <h3>분류추가</h3>
-          <textarea type="text" placeholder="추가하고 싶은 분류를 입력해주세요." v-model="newTitle" />
+          <textarea
+            type="text"
+            placeholder="추가하고 싶은 분류를 입력해주세요."
+            v-model="newTitle"
+          />
           <div class="button-wrapper">
             <button class="left-btn" @click="closeModal">닫기</button>
             <button class="right-btn" @click="goToAdd">확인</button>
@@ -24,24 +28,24 @@ export default {
     visible: {
       type: Boolean,
       require: true,
-      default: false
+      default: false,
     },
     datas: {
       type: Number,
       required: true,
-      createDate: ""
-    }
+      createDate: "",
+    },
   },
   data() {
     return {
       modalPlug: this.visible,
-      newTitle: ""
+      newTitle: "",
     };
   },
   watch: {
     visible(val) {
       this.modalPlug = val;
-    }
+    },
   },
   methods: {
     // handleWrapperClick() {
@@ -53,6 +57,7 @@ export default {
       this.$emit("change", false);
     },
     async goToAdd() {
+      alert(this.datas);
       var formData = new FormData();
       formData.set("categoryName", this.newTitle);
       formData.set("status", 0);
@@ -68,54 +73,18 @@ export default {
         window.location.reload();
         alert("추가 완료");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-$module: "my-modal";
-.#{$module} {
-  // This is modal bg
-  background-color: rgba(0, 0, 0, 0.7);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  overflow: auto;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  //This is modal layer
-  &__dialog {
-    width: 500px;
-    position: absolute;
-    background: #fff;
-    margin-bottom: 50px;
-  }
-
-  &__header {
-    font-size: 28px;
-    font-weight: bold;
-    line-height: 1.29;
-    padding: 16px 16px 0 25px;
-    position: relative;
-  }
-  &__body {
-    padding: 25px;
-    min-height: 150px;
-    max-height: 412px;
-    overflow-y: scroll;
-  }
-}
 .cover-bg {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.7);
-  position: absolute;
   top: 0;
   left: 0;
   height: 100%;
