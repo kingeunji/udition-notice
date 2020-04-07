@@ -87,8 +87,6 @@ export default {
         }
       }
     }
-    .content-container {
-    }
   }
 }
 </style>

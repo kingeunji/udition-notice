@@ -8,9 +8,11 @@
             <draggable class="list-group" :list="list1" group="people">
               <div
                 class="list-group-item"
-                v-for="(element) in list1"
+                v-for="element in list1"
                 :key="element.categoryName"
-              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
+              >
+                {{ element.categoryName }} ({{ element.termsCnt }})
+              </div>
             </draggable>
           </div>
           <div class="col-3">
@@ -22,23 +24,33 @@
                 :key="element.categoryName"
                 :class="{ refresh: element.deleteBoo == true }"
                 @click="handle_delete(element, i)"
-              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
+              >
+                {{ element.categoryName }} ({{ element.termsCnt }})
+              </div>
             </draggable>
           </div>
         </div>
       </div>
       <div class="button-container">
         <div>
-          <button @click="visible = true" class="add btn-style">분류 추가</button>
+          <button @click="visible = true" class="add btn-style">
+            분류 추가
+          </button>
           <app-my-modal
             v-bind:visible="visible"
             @change="changeModal"
-            :datas="contents.length + 1"
+            @input="goToAdd"
           />
         </div>
         <div>
-          <button @click="visible_save = true" class="save btn-style">저장</button>
-          <saveModal v-bind:visible="visible_save" @change="changeSaveModal" @save="goToSave" />
+          <button @click="visible_save = true" class="save btn-style">
+            저장
+          </button>
+          <saveModal
+            v-bind:visible="visible_save"
+            @change="changeSaveModal"
+            @save="goToSave"
+          />
         </div>
       </div>
     </div>
@@ -58,18 +70,17 @@ export default {
     return {
       visible: false,
       visible_save: false,
-      newTitle: "",
       list1: [],
       list2: [],
       contents: [],
       contents_modify: [],
-      categoryName: ""
+      categoryName: "",
     };
   },
   components: {
     appMyModal: myModal,
     saveModal,
-    draggable
+    draggable,
   },
   created() {
     window.addEventListener("beforeunload", this.handleBrowser);
@@ -78,7 +89,7 @@ export default {
   watch: {
     list2() {
       this.handle_delete();
-    }
+    },
   },
   methods: {
     handleBrowser: function handleBrowser(e) {
@@ -146,13 +157,31 @@ export default {
 
       this.visible_save = val;
     },
+    goToAdd(cnt) {
+      this.newTitle = cnt;
+      console.log("콘텐츠", this.contents);
+      let a = this.contents[this.contents.length - 1].categoryNo + 1;
+      console.log("a", a);
+      let b = this.contents.length + 1;
+      console.log("b", b);
+      let content = {
+        categoryNo: a,
+        categoryName: cnt,
+        termsCnt: 0,
+        status: 0,
+        isDelete: 1,
+        sortNo: b,
+        deleteBoo: "false",
+      };
+      this.list2.push(content);
+    },
     changeModal(val) {
       this.visible = val;
     },
     changeSaveModal(val) {
       this.visible_save = val;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">
