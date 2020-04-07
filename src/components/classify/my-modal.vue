@@ -4,11 +4,7 @@
       <div class="bg-white">
         <div class="text-wrapper">
           <h3>분류추가</h3>
-          <textarea
-            type="text"
-            placeholder="추가하고 싶은 분류를 입력해주세요."
-            v-model="newTitle"
-          />
+          <textarea type="text" placeholder="추가하고 싶은 분류를 입력해주세요." v-model="newTitle" />
           <div class="button-wrapper">
             <button class="left-btn" @click="closeModal">닫기</button>
             <button class="right-btn" @click="goToAdd">확인</button>
@@ -28,24 +24,24 @@ export default {
     visible: {
       type: Boolean,
       require: true,
-      default: false,
+      default: false
     },
     datas: {
       type: Number,
       required: true,
-      createDate: "",
-    },
+      createDate: ""
+    }
   },
   data() {
     return {
       modalPlug: this.visible,
-      newTitle: "",
+      newTitle: ""
     };
   },
   watch: {
     visible(val) {
       this.modalPlug = val;
-    },
+    }
   },
   methods: {
     // handleWrapperClick() {
@@ -57,24 +53,23 @@ export default {
       this.$emit("change", false);
     },
     async goToAdd() {
-      alert(this.datas);
       var formData = new FormData();
       formData.set("categoryName", this.newTitle);
       formData.set("status", 0);
       formData.set("isDelete", 1);
       formData.set("sortNo", this.datas);
       const res = await classifyUpdate.list(formData);
-      console.log("내용", this.newTitle);
-      console.log("보내는 데이터", res);
-      console.log("프롭스값", this.datas);
+      // console.log("내용", this.newTitle);
+      // console.log("보내는 데이터", res);
+      // console.log("프롭스값", this.datas);
       this.modalPlug = false;
       this.$emit("change", false);
       if (res.status == 200) {
         window.location.reload();
         alert("추가 완료");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
