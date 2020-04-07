@@ -5,12 +5,12 @@
         <div class="board-container">
           <div class="col-3">
             <h3>활성화된 분류</h3>
-            <draggable class="list-group" :list="list1" group="people" @change="log">
+            <draggable class="list-group" :list="list1" group="people">
               <div
                 class="list-group-item"
-                v-for="(element) in list1"
+                v-for="(element, i) in list1"
                 :key="element.categoryName"
-              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
+              >{{ element.categoryName }} ({{ element.termsCnt }}) {{ i }}</div>
             </draggable>
           </div>
           <div class="col-3">
@@ -18,11 +18,11 @@
             <draggable class="list-group" :list="list2" group="people" @change="log">
               <div
                 class="list-group-item delete"
-                v-for="(element, index) in list2"
+                v-for="(element, i) in list2"
                 :key="element.categoryName"
                 :class="{ refresh: element.deleteBoo == true }"
-                @click="handle_delete(index)"
-              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
+                @click="handle_delete(element, i)"
+              >{{ element.categoryName }} ({{ element.termsCnt }}) {{list1.length + i + 1}}</div>
             </draggable>
           </div>
         </div>
@@ -30,16 +30,15 @@
       <div class="button-container">
         <div>
           <button @click="visible = true" class="add btn-style">분류 추가</button>
-          <app-my-modal v-bind:visible="visible" @change="changeModal" :datas="contents.length" />
+          <app-my-modal
+            v-bind:visible="visible"
+            @change="changeModal"
+            :datas="contents.length + 1"
+          />
         </div>
         <div>
           <button @click="visible_save = true" class="save btn-style">저장</button>
-          <saveModal
-            v-bind:visible="visible_save"
-            @change="changeSaveModal"
-            @save="goToSave"
-            :datas="contents"
-          />
+          <saveModal v-bind:visible="visible_save" @change="changeSaveModal" @save="goToSave" />
         </div>
       </div>
     </div>
@@ -61,12 +60,11 @@ export default {
       visible: false,
       visible_save: false,
       newTitle: "",
-      delete: false,
       list1: [],
       list2: [],
       contents: [],
-      click: "",
-      categoryName: ""
+      categoryName: "",
+      modify: []
     };
   },
   components: {
@@ -78,6 +76,11 @@ export default {
     window.addEventListener("beforeunload", this.handleBrowser);
     this.fetchData();
   },
+  watch: {
+    list2() {
+      this.handle_delete();
+    }
+  },
   methods: {
     handleBrowser: function handleBrowser(e) {
       e.preventDefault();
@@ -86,7 +89,7 @@ export default {
     async fetchData() {
       const res = await classify.list();
       this.contents = res.data.result;
-      console.log("데이터", this.contents);
+      // console.log("데이터", this.contents);
 
       for (var i = 0; i < this.contents.length; i++) {
         if (this.contents[i].isDelete == 0) {
@@ -97,23 +100,43 @@ export default {
       }
     },
     async goToSave(val) {
-      var formData = new FormData();
-      formData.set("categoryName", this.datas);
+      for (let i = 0; i < this.modify.length; i++) {
+        var formData = new FormData();
+        formData.set("categoryNo", this.modify[i].categoryNo);
+        formData.set("status", this.modify[i].status);
+        const res = await classifyUpdate.list(formData);
+        if (res.status == 200) {
+          window.location.reload();
+          alert("삭제 완료");
+        }
 
-      const res = await classifyUpdate.list(formData);
-
-      console.log(res);
+        console.log(res);
+      }
 
       this.visible_save = val;
     },
-    handle_delete(i) {
-      console.log("선택 인덱스", i);
-      console.log("상태", this.deleteBoo);
-      this.click = i;
-      if (this.list2[i].deleteBoo == false) {
-        this.list2[i].deleteBoo = true;
+    // 이미지 토글버튼
+    handle_delete(el, i) {
+      // console.log("i", i);
+      const { list2, modify } = this;
+      console.log("deleteBoo 전", this.list2[i].deleteBoo);
+      list2[i].deleteBoo = !list2[i].deleteBoo;
+      console.log("deleteBoo 후", this.list2[i].deleteBoo);
+      if (list2[i].deleteBoo) {
+        modify.push({
+          categoryNo: el.categoryNo,
+          status: 2,
+          sortNo: i
+        });
+        console.log("수정", modify);
       } else {
-        this.list2[i].deleteBoo = false;
+        // sortNo로 클릭한 객체를 modify 배열에서 찾아야해
+        // for (let idx = 0; idx < modify.length; idx++) {
+        //   console.log("sortNo", modify[idx].sortNo, "i", i);
+        //   // idx는 배열의 index, i는 전체 contents에서 클릭한 항목
+        //   return (modify[idx].sortNo = i && modify.splice(idx + 1, 1));
+        // }
+        console.log("최종적으로 보낼 데이터", modify);
       }
     },
     changeModal(val) {
@@ -121,6 +144,7 @@ export default {
     },
     changeSaveModal(val) {
       this.visible_save = val;
+      d;
     }
   }
 };
@@ -129,7 +153,6 @@ export default {
 <style lang="scss">
 .datail-container {
   width: 500px;
-  height: auto;
   margin: 0 auto;
 
   .section {

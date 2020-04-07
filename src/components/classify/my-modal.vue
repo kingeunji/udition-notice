@@ -58,13 +58,16 @@ export default {
       formData.set("status", 0);
       formData.set("isDelete", 1);
       formData.set("sortNo", this.datas);
-
       const res = await classifyUpdate.list(formData);
       console.log("내용", this.newTitle);
       console.log("보내는 데이터", res);
       console.log("프롭스값", this.datas);
       this.modalPlug = false;
       this.$emit("change", false);
+      if (res.status == 200) {
+        window.location.reload();
+        alert("추가 완료");
+      }
     }
   }
 };

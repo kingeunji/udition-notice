@@ -28,12 +28,12 @@ export default {
       type: Boolean,
       require: true,
       default: false
-    },
-    datas: {
-      type: Number,
-      required: true,
-      createDate: ""
     }
+    // datas: {
+    //   type: Number,
+    //   required: true,
+    //   createDate: ""
+    // }
   },
   data() {
     return {
