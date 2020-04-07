@@ -40,7 +40,7 @@
           <app-my-modal
             v-bind:visible="visible"
             @change="changeModal"
-            :datas="contents.length + 1"
+            @input="goToAdd"
           />
         </div>
         <div>
@@ -71,7 +71,6 @@ export default {
     return {
       visible: false,
       visible_save: false,
-      newTitle: "",
       list1: [],
       list2: [],
       contents: [],
@@ -118,6 +117,24 @@ export default {
       window.location.reload();
       alert("삭제 완료");
       this.visible_save = val;
+    },
+    goToAdd(cnt) {
+      this.newTitle = cnt;
+      console.log("콘텐츠", this.contents);
+      let a = this.contents[this.contents.length - 1].categoryNo + 1;
+      console.log("a", a);
+      let b = this.contents.length + 1;
+      console.log("b", b);
+      let content = {
+        categoryNo: a,
+        categoryName: cnt,
+        termsCnt: 0,
+        status: 0,
+        isDelete: 1,
+        sortNo: b,
+        deleteBoo: "false",
+      };
+      this.list2.push(content);
     },
     // 이미지 토글버튼
     handle_delete(el, i) {
