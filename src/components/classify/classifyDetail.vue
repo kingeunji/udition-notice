@@ -8,11 +8,9 @@
             <draggable class="list-group" :list="list1" group="people">
               <div
                 class="list-group-item"
-                v-for="(element, i) in list1"
+                v-for="(element) in list1"
                 :key="element.categoryName"
-              >
-                {{ element.categoryName }} ({{ element.termsCnt }}) {{ i }}
-              </div>
+              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
             </draggable>
           </div>
           <div class="col-3">
@@ -24,19 +22,14 @@
                 :key="element.categoryName"
                 :class="{ refresh: element.deleteBoo == true }"
                 @click="handle_delete(element, i)"
-              >
-                {{ element.categoryName }} ({{ element.termsCnt }})
-                {{ list1.length + i + 1 }}
-              </div>
+              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
             </draggable>
           </div>
         </div>
       </div>
       <div class="button-container">
         <div>
-          <button @click="visible = true" class="add btn-style">
-            분류 추가
-          </button>
+          <button @click="visible = true" class="add btn-style">분류 추가</button>
           <app-my-modal
             v-bind:visible="visible"
             @change="changeModal"
@@ -44,14 +37,8 @@
           />
         </div>
         <div>
-          <button @click="visible_save = true" class="save btn-style">
-            저장
-          </button>
-          <saveModal
-            v-bind:visible="visible_save"
-            @change="changeSaveModal"
-            @save="goToSave"
-          />
+          <button @click="visible_save = true" class="save btn-style">저장</button>
+          <saveModal v-bind:visible="visible_save" @change="changeSaveModal" @save="goToSave" />
         </div>
       </div>
     </div>
@@ -75,18 +62,23 @@ export default {
       list1: [],
       list2: [],
       contents: [],
-      categoryName: "",
-      modify: [],
+      contents_modify: [],
+      categoryName: ""
     };
   },
   components: {
     appMyModal: myModal,
     saveModal,
-    draggable,
+    draggable
   },
   created() {
     window.addEventListener("beforeunload", this.handleBrowser);
     this.fetchData();
+  },
+  watch: {
+    list2() {
+      this.handle_delete();
+    }
   },
   methods: {
     handleBrowser: function handleBrowser(e) {
@@ -96,7 +88,8 @@ export default {
     async fetchData() {
       const res = await classify.list();
       this.contents = res.data.result;
-      // console.log("데이터", this.contents);
+      this.contents_modify = this.contents;
+
       for (var i = 0; i < this.contents.length; i++) {
         if (this.contents[i].isDelete == 0) {
           this.list1.push(this.contents[i]);
@@ -105,56 +98,61 @@ export default {
         }
       }
     },
+    // 이미지 토글버튼 & 약관 카테고리 삭제
+    handle_delete(el, i) {
+      if (this.list2[i].deleteBoo == true) {
+        this.list2[i].deleteBoo = false;
+        this.list2[i].status = -1;
+      } else {
+        this.list2[i].deleteBoo = true;
+        this.list2[i].status = 2;
+      }
+    },
+    // 저장버튼
     async goToSave(val) {
-      for (let i = 0; i < this.modify.length; i++) {
-        console.log(this.modify[i].categoryNo);
+      //활성화된 분류
+      for (let i = 0; i < this.list1.length; i++) {
+        this.list1[i].isDelete = 0;
+      }
+      console.log(this.contents);
+      console.log(this.contents_modify);
+
+      for (let i = 0; i < this.contents_modify.length; i++) {
+        this.contents_modify[i].sortNo == i;
+        console.log(this.contents_modify);
+        if (
+          this.contents[i].categoryNo !== this.contents_modify[i].categoryNo &&
+          this.contents_modify[i].status !== 0 &&
+          this.contents_modify[i].status !== 2
+        ) {
+          this.contents_modify[i].status = 1;
+        }
+      }
+      console.log("최종", this.contents_modify);
+
+      // 전체 배열
+      for (let i = 0; i < this.contents_modify.length; i++) {
         var formData = new FormData();
-        formData.set("categoryNo", this.modify[i].categoryNo);
-        formData.set("status", this.modify[i].status);
+        formData.set("categoryNo", this.contents_modify[i].categoryNo);
+        formData.set("status", this.contents_modify[i].status);
+        formData.set("categoryName", this.contents_modify[i].categoryName);
+        formData.set("isDelete", this.contents_modify[i].isDelete);
+        formData.set("sortNo", this.contents_modify[i].sortNo);
         const res = await classifyUpdate.list(formData);
         console.log(res);
       }
-
       window.location.reload();
-      alert("삭제 완료");
+      alert("저장 완료");
+
       this.visible_save = val;
-    },
-    // 이미지 토글버튼
-    handle_delete(el, i) {
-      // console.log("i", i);
-      const { list2, modify } = this;
-      console.log("deleteBoo 전", this.list2[i].deleteBoo);
-      if (list2[i].deleteBoo == true) {
-        list2[i].deleteBoo = false;
-      } else {
-        list2[i].deleteBoo = true;
-      }
-      // list2[i].deleteBoo = !list2[i].deleteBoo;
-      console.log("deleteBoo 후", this.list2[i].deleteBoo);
-      if (list2[i].deleteBoo) {
-        modify.push({
-          categoryNo: el.categoryNo,
-          status: 2,
-          sortNo: i,
-        });
-        console.log("수정", modify, i);
-      } else {
-        // sortNo로 클릭한 객체를 modify 배열에서 찾아야해
-        for (let idx = 0; idx < modify.length; idx++) {
-          console.log("sortNo", modify[idx].sortNo, "i", i);
-          // idx는 배열의 index, i는 전체 contents에서 클릭한 항목
-          // return (modify[idx].sortNo = i && modify.splice(idx + 1, 1));
-        }
-        console.log("최종적으로 보낼 데이터", modify);
-      }
     },
     changeModal(val) {
       this.visible = val;
     },
     changeSaveModal(val) {
       this.visible_save = val;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">
