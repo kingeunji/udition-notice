@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="all-container">
     <header>
       <h2>약관 관리</h2>
     </header>
@@ -30,58 +30,65 @@ export default {
   name: "",
   props: {},
   components: {
-    classifyDetail
+    classifyDetail,
   },
   // 초기화, 기본 값 설정
   data() {
     return {
-      selected: 2
+      selected: 2,
     };
   },
   methods: {
     fetchData(sel) {
       console.log("카테고리", sel);
       this.selected = sel;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-header {
-  padding: 20px 0;
-  border-bottom: 1px solid #e5e5e5;
-  h2 {
-    width: 750px;
-    margin: 0 auto;
-    font-size: 20px;
+.all-container {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  overflow: scroll;
+
+  header {
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e5e5;
+    h2 {
+      width: 750px;
+      margin: 0 auto;
+      font-size: 20px;
+    }
   }
-}
-.policy-container {
-  width: 750px;
-  margin: 50px auto;
-  display: flex;
-  justify-content: space-between;
-  color: #1f2125;
+  .policy-container {
+    width: 750px;
+    margin: 50px auto;
+    display: flex;
+    justify-content: space-between;
+    color: #1f2125;
 
-  .list {
-    margin-right: 30px;
-    .select-list {
-      li {
-        margin-bottom: 20px;
-        padding-bottom: 5px;
-        cursor: pointer;
+    .list {
+      margin-right: 30px;
+      .select-list {
+        li {
+          margin-bottom: 20px;
+          padding-bottom: 5px;
+          cursor: pointer;
 
-        span {
-          &.active {
-            font-weight: bold;
-            border-bottom: 1px solid #1f2125;
+          span {
+            &.active {
+              font-weight: bold;
+              border-bottom: 1px solid #1f2125;
+            }
           }
         }
       }
     }
-  }
-  .content-container {
+    .content-container {
+    }
   }
 }
 </style>
