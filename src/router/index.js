@@ -17,11 +17,6 @@ export default new VueRouter({
             component: noticeList  
         },
         {
-            path: '/notice-detail:id',
-            name: 'notice-detail',
-            component: noticeDetail
-        },
-        {
             path: '/notice-detail/:id/:type',
             name : 'detail',
             component: noticeDetail,

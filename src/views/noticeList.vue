@@ -45,7 +45,7 @@ export default {
   props: {},
   components: {
     listDetail,
-    Paginate
+    Paginate,
   },
   // 초기화, 기본 값 설정
   data() {
@@ -54,7 +54,7 @@ export default {
       noticeType: 0,
       noticeList: [],
       pageCount: 0,
-      pageNum: 0
+      pageNum: 0,
     };
   },
   watch: {
@@ -65,7 +65,7 @@ export default {
     },
     requestPage() {
       this.fetchData();
-    }
+    },
   },
   created() {
     this.fetchData();
@@ -90,21 +90,9 @@ export default {
       this.requestPage = pageNum - 1;
       this.fetchData();
 
-      // listpage는 api -> index.js에서 받아온 변수고, list는 해당 변수 안에 있던 함수.
-      // let formData = new FormData();
-      // formData.append("requestPage", pageNum - 1);
-      // formData.append("noticeType", this.noticeType);
-      // const res = await listPage.list(formData);
-      // // 초기값으로 설정한 items에 res.data.object를 담아준다.
-      // this.noticeList = await res.data.result;
-
-      // // 날짜계산
-      // for (let i = 0; i < this.noticeList.length; i++) {
-      //   date(this.noticeList[i]);
-      // }
       this.pageNum = pageNum;
-    }
-  }
+    },
+  },
 };
 </script>
 

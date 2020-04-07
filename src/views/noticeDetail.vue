@@ -2,20 +2,25 @@
   <section id="detail">
     <div class="top">
       <div class="top-title">{{ content.title }}</div>
-      <div class="top-date">{{ this.content.createDate && convertToDate(this.content.createDate) }}</div>
+      <div class="top-date">
+        {{ this.content.createDate && convertToDate(this.content.createDate) }}
+      </div>
     </div>
     <div class="content-container">
       <img
         :src="
           'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
-            content.image
+          content.image
         "
         alt="img"
         :class="{
-          active: content.image.length > 0 ? image == true : image == false
+          active: content.image.length > 0 ? image == true : image == false,
         }"
       />
-      <div class="ql-editor" v-html="content.tts"></div>
+      <div class="ql-editor">
+        <div v-html="content.tts"></div>
+        <!-- <strong style="font-weight: bold !important;"></strong> -->
+      </div>
       <div class="buttons">
         <button>
           <router-link to="/notice">목록으로</router-link>
@@ -32,8 +37,8 @@
         {{ this.content.preTitle1 }}
         <div>
           {{
-          this.content.preNoticeNo1 &&
-          convertToDate(this.content.preCreateDate1)
+            this.content.preNoticeNo1 &&
+            convertToDate(this.content.preCreateDate1)
           }}
         </div>
       </div>
@@ -41,8 +46,8 @@
         {{ this.content.preTitle2 }}
         <div>
           {{
-          this.content.preNoticeNo2 &&
-          convertToDate(this.content.preCreateDate2)
+            this.content.preNoticeNo2 &&
+            convertToDate(this.content.preCreateDate2)
           }}
         </div>
       </div>
@@ -64,7 +69,7 @@ import sns from "@/components/detail/sns";
 export default {
   name: "noticeDetail",
   components: {
-    sns
+    sns,
   },
   data() {
     return {
@@ -75,9 +80,9 @@ export default {
         0: "전체",
         1: "공지",
         2: "이벤트",
-        3: "보도자료"
+        3: "보도자료",
       },
-      image: false
+      image: false,
     };
   },
   created() {
@@ -100,12 +105,13 @@ export default {
     goToDetail(num) {
       let type = this.content.noticeType;
       this.$router.push({ name: "detail", params: { id: num, type: type } });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped lang="scss">
+<style scope lang="scss">
+/* scope 빼면 edit 스타일 적용이 된다. */
 section {
   display: flex;
   flex-direction: column;
@@ -156,15 +162,27 @@ section {
     .ql-editor {
       margin-bottom: 24px;
 
-      h1 {
-        strong {
-          font-weight: bold;
-          /* em {
-          } */
+      /* h1.ql-align-center {
+        strong.ql-font-monospace {
+          em {
+            u {
+              font-weight: bold;
+              text-decoration: underline;
+            }
+          }
         }
+      } */
+
+      /* u {
+        font-weight: bold !important;
+        color: red !important;
+      }  */
+      /* .ql-editor .ql-font-monospace u {
+        font-weight: bold;
+        border-bottom: 1px solid black;
       }
 
-      /* .ql-editor strong em u {
+      .ql-editor strong em u {
         font-style: italic;
         font-weight: bold;
         border-bottom: 1px solid black;
