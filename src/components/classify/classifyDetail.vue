@@ -73,7 +73,6 @@ export default {
       list1: [],
       list2: [],
       contents: [],
-      contents_modify: [],
       categoryName: "",
     };
   },
@@ -100,7 +99,6 @@ export default {
       const res = await classify.list();
       this.contents = res.data.result;
       this.contents_modify = this.contents;
-
       for (var i = 0; i < this.contents.length; i++) {
         if (this.contents[i].isDelete == 0) {
           this.list1.push(this.contents[i]);
@@ -121,56 +119,55 @@ export default {
     },
     // 저장버튼
     async goToSave(val) {
-      //활성화된 분류
+      //list1
       for (let i = 0; i < this.list1.length; i++) {
         this.list1[i].isDelete = 0;
-      }
-      console.log(this.contents);
-      console.log(this.contents_modify);
-
-      for (let i = 0; i < this.contents_modify.length; i++) {
-        this.contents_modify[i].sortNo == i;
-        console.log(this.contents_modify);
-        if (
-          this.contents[i].categoryNo !== this.contents_modify[i].categoryNo &&
-          this.contents_modify[i].status !== 0 &&
-          this.contents_modify[i].status !== 2
-        ) {
-          this.contents_modify[i].status = 1;
+        this.list1[i].sortNo = i + 1;
+        if (this.list1[i].status == -1) {
+          this.list1[i].status = 1;
         }
       }
-      console.log("최종", this.contents_modify);
-
-      // 전체 배열
-      for (let i = 0; i < this.contents_modify.length; i++) {
-        var formData = new FormData();
-        formData.set("categoryNo", this.contents_modify[i].categoryNo);
-        formData.set("status", this.contents_modify[i].status);
-        formData.set("categoryName", this.contents_modify[i].categoryName);
-        formData.set("isDelete", this.contents_modify[i].isDelete);
-        formData.set("sortNo", this.contents_modify[i].sortNo);
-        const res = await classifyUpdate.list(formData);
-        console.log(res);
+      await this.fetchSave(val, this.list1);
+      //list2
+      for (let i = 0; i < this.list2.length; i++) {
+        this.list2[i].isDelete = 1;
+        this.list2[i].sortNo = this.list1.length + i + 1;
+        if (this.list2[i].status == -1) {
+          this.list2[i].status = 1;
+        }
       }
+      await this.fetchSave(val, this.list2);
       window.location.reload();
       alert("저장 완료");
-
       this.visible_save = val;
+    },
+    async fetchSave(val, arr) {
+      console.log(arr);
+      for (let i = 0; i < arr.length; i++) {
+        var formData = new FormData();
+        formData.set("categoryNo", arr[i].categoryNo);
+        formData.set("status", arr[i].status);
+        formData.set("categoryName", arr[i].categoryName);
+        formData.set("isDelete", arr[i].isDelete);
+        formData.set("sortNo", arr[i].sortNo);
+        const res = await classifyUpdate.list(formData);
+        console.log("res", res);
+      }
     },
     goToAdd(cnt) {
       this.newTitle = cnt;
-      console.log("콘텐츠", this.contents);
-      let a = this.contents[this.contents.length - 1].categoryNo + 1;
-      console.log("a", a);
-      let b = this.contents.length + 1;
-      console.log("b", b);
+      console.log("콘텐츠", this.contents.length);
+      if (this.list2.length > 0) {
+        var no = this.list2[this.list2.length - 1].categoryNo + 1;
+        var sort = this.list2.length + 1;
+      }
       let content = {
-        categoryNo: a,
+        categoryNo: no ? no : 1,
         categoryName: cnt,
         termsCnt: 0,
         status: 0,
         isDelete: 1,
-        sortNo: b,
+        sortNo: sort ? sort : 1,
         deleteBoo: "false",
       };
       this.list2.push(content);
