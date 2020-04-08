@@ -57,7 +57,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
 .cover-bg {
   position: absolute;
   display: flex;

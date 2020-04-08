@@ -10,7 +10,9 @@
                 class="list-group-item"
                 v-for="element in list1"
                 :key="element.categoryName"
-              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
+              >
+                {{ element.categoryName }} ({{ element.termsCnt }})
+              </div>
             </draggable>
           </div>
           <div class="col-3">
@@ -22,19 +24,33 @@
                 :key="element.categoryName"
                 :class="{ refresh: element.deleteBoo == true }"
                 @click="handle_delete(element, i)"
-              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
+              >
+                {{ element.categoryName }} ({{ element.termsCnt }})
+              </div>
             </draggable>
           </div>
         </div>
       </div>
       <div class="button-container">
         <div>
-          <button @click="visible = true" class="add btn-style">분류 추가</button>
-          <app-my-modal v-bind:visible="visible" @change="changeModal" @input="goToAdd" />
+          <button @click="visible = true" class="add btn-style">
+            분류 추가
+          </button>
+          <app-my-modal
+            v-bind:visible="visible"
+            @change="changeModal"
+            @input="goToAdd"
+          />
         </div>
         <div>
-          <button @click="visible_save = true" class="save btn-style">저장</button>
-          <saveModal v-bind:visible="visible_save" @change="changeSaveModal" @save="goToSave" />
+          <button @click="visible_save = true" class="save btn-style">
+            저장
+          </button>
+          <saveModal
+            v-bind:visible="visible_save"
+            @change="changeSaveModal"
+            @save="goToSave"
+          />
         </div>
       </div>
     </div>
@@ -57,13 +73,13 @@ export default {
       list1: [],
       list2: [],
       contents: [],
-      categoryName: ""
+      categoryName: "",
     };
   },
   components: {
     appMyModal: myModal,
     saveModal,
-    draggable
+    draggable,
   },
   created() {
     window.addEventListener("beforeunload", this.handleBrowser);
@@ -72,7 +88,7 @@ export default {
   watch: {
     list2() {
       this.handle_delete();
-    }
+    },
   },
   methods: {
     handleBrowser: function handleBrowser(e) {
@@ -83,7 +99,6 @@ export default {
       const res = await classify.list();
       this.contents = res.data.result;
       this.contents_modify = this.contents;
-
       for (var i = 0; i < this.contents.length; i++) {
         if (this.contents[i].isDelete == 0) {
           this.list1.push(this.contents[i]);
@@ -103,26 +118,28 @@ export default {
       }
     },
     // 저장버튼
-    goToSave(val) {
+    async goToSave(val) {
       //list1
       for (let i = 0; i < this.list1.length; i++) {
         this.list1[i].isDelete = 0;
-        this.list1[i].sortNo = i;
+        this.list1[i].sortNo = i + 1;
         if (this.list1[i].status == -1) {
           this.list1[i].status = 1;
         }
       }
-      this.fetchSave(val, this.list1);
-
+      await this.fetchSave(val, this.list1);
       //list2
       for (let i = 0; i < this.list2.length; i++) {
         this.list2[i].isDelete = 1;
-        this.list2[i].sortNo = this.list1.length + i;
+        this.list2[i].sortNo = this.list1.length + i + 1;
         if (this.list2[i].status == -1) {
           this.list2[i].status = 1;
         }
       }
-      this.fetchSave(val, this.list2);
+      await this.fetchSave(val, this.list2);
+      window.location.reload();
+      alert("저장 완료");
+      this.visible_save = val;
     },
     async fetchSave(val, arr) {
       console.log(arr);
@@ -134,11 +151,8 @@ export default {
         formData.set("isDelete", arr[i].isDelete);
         formData.set("sortNo", arr[i].sortNo);
         const res = await classifyUpdate.list(formData);
-        console.log(res);
+        console.log("res", res);
       }
-      window.location.reload();
-      alert("저장 완료");
-      this.visible_save = val;
     },
     goToAdd(cnt) {
       if (this.list2.length > 0) {
@@ -152,7 +166,7 @@ export default {
         status: 0,
         isDelete: 1,
         sortNo: sort ? sort : 1,
-        deleteBoo: "false"
+        deleteBoo: "false",
       };
       this.list2.push(content);
     },
@@ -161,8 +175,8 @@ export default {
     },
     changeSaveModal(val) {
       this.visible_save = val;
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss">

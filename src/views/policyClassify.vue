@@ -30,24 +30,24 @@ export default {
   name: "",
   props: {},
   components: {
-    classifyDetail
+    classifyDetail,
   },
   // 초기화, 기본 값 설정
   data() {
     return {
-      selected: 2
+      selected: 2,
     };
   },
   methods: {
     fetchData(sel) {
       console.log("카테고리", sel);
       this.selected = sel;
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .all-container {
   width: 100%;
   height: 100vh;
