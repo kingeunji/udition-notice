@@ -96,7 +96,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .container {
   width: 750px;
   margin: 0 auto;

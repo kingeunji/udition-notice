@@ -10,9 +10,7 @@
                 class="list-group-item"
                 v-for="element in list1"
                 :key="element.categoryName"
-              >
-                {{ element.categoryName }} ({{ element.termsCnt }})
-              </div>
+              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
             </draggable>
           </div>
           <div class="col-3">
@@ -24,33 +22,19 @@
                 :key="element.categoryName"
                 :class="{ refresh: element.deleteBoo == true }"
                 @click="handle_delete(element, i)"
-              >
-                {{ element.categoryName }} ({{ element.termsCnt }})
-              </div>
+              >{{ element.categoryName }} ({{ element.termsCnt }})</div>
             </draggable>
           </div>
         </div>
       </div>
       <div class="button-container">
         <div>
-          <button @click="visible = true" class="add btn-style">
-            분류 추가
-          </button>
-          <app-my-modal
-            v-bind:visible="visible"
-            @change="changeModal"
-            @input="goToAdd"
-          />
+          <button @click="visible = true" class="add btn-style">분류 추가</button>
+          <app-my-modal v-bind:visible="visible" @change="changeModal" @input="goToAdd" />
         </div>
         <div>
-          <button @click="visible_save = true" class="save btn-style">
-            저장
-          </button>
-          <saveModal
-            v-bind:visible="visible_save"
-            @change="changeSaveModal"
-            @save="goToSave"
-          />
+          <button @click="visible_save = true" class="save btn-style">저장</button>
+          <saveModal v-bind:visible="visible_save" @change="changeSaveModal" @save="goToSave" />
         </div>
       </div>
     </div>
@@ -73,14 +57,13 @@ export default {
       list1: [],
       list2: [],
       contents: [],
-      contents_modify: [],
-      categoryName: "",
+      categoryName: ""
     };
   },
   components: {
     appMyModal: myModal,
     saveModal,
-    draggable,
+    draggable
   },
   created() {
     window.addEventListener("beforeunload", this.handleBrowser);
@@ -89,7 +72,7 @@ export default {
   watch: {
     list2() {
       this.handle_delete();
-    },
+    }
   },
   methods: {
     handleBrowser: function handleBrowser(e) {
@@ -120,58 +103,56 @@ export default {
       }
     },
     // 저장버튼
-    async goToSave(val) {
-      //활성화된 분류
+    goToSave(val) {
+      //list1
       for (let i = 0; i < this.list1.length; i++) {
         this.list1[i].isDelete = 0;
-      }
-      console.log(this.contents);
-      console.log(this.contents_modify);
-
-      for (let i = 0; i < this.contents_modify.length; i++) {
-        this.contents_modify[i].sortNo == i;
-        console.log(this.contents_modify);
-        if (
-          this.contents[i].categoryNo !== this.contents_modify[i].categoryNo &&
-          this.contents_modify[i].status !== 0 &&
-          this.contents_modify[i].status !== 2
-        ) {
-          this.contents_modify[i].status = 1;
+        this.list1[i].sortNo = i;
+        if (this.list1[i].status == -1) {
+          this.list1[i].status = 1;
         }
       }
-      console.log("최종", this.contents_modify);
+      this.fetchSave(val, this.list1);
 
-      // 전체 배열
-      for (let i = 0; i < this.contents_modify.length; i++) {
+      //list2
+      for (let i = 0; i < this.list2.length; i++) {
+        this.list2[i].isDelete = 1;
+        this.list2[i].sortNo = this.list1.length + i;
+        if (this.list2[i].status == -1) {
+          this.list2[i].status = 1;
+        }
+      }
+      this.fetchSave(val, this.list2);
+    },
+    async fetchSave(val, arr) {
+      console.log(arr);
+      for (let i = 0; i < arr.length; i++) {
         var formData = new FormData();
-        formData.set("categoryNo", this.contents_modify[i].categoryNo);
-        formData.set("status", this.contents_modify[i].status);
-        formData.set("categoryName", this.contents_modify[i].categoryName);
-        formData.set("isDelete", this.contents_modify[i].isDelete);
-        formData.set("sortNo", this.contents_modify[i].sortNo);
+        formData.set("categoryNo", arr[i].categoryNo);
+        formData.set("status", arr[i].status);
+        formData.set("categoryName", arr[i].categoryName);
+        formData.set("isDelete", arr[i].isDelete);
+        formData.set("sortNo", arr[i].sortNo);
         const res = await classifyUpdate.list(formData);
         console.log(res);
       }
       window.location.reload();
       alert("저장 완료");
-
       this.visible_save = val;
     },
     goToAdd(cnt) {
-      this.newTitle = cnt;
-      console.log("콘텐츠", this.contents);
-      let a = this.contents[this.contents.length - 1].categoryNo + 1;
-      console.log("a", a);
-      let b = this.contents.length + 1;
-      console.log("b", b);
+      if (this.list2.length > 0) {
+        var no = this.list2[this.list2.length - 1].categoryNo + 1;
+        var sort = this.list2.length + 1;
+      }
       let content = {
-        categoryNo: a,
+        categoryNo: no ? no : 1,
         categoryName: cnt,
         termsCnt: 0,
         status: 0,
         isDelete: 1,
-        sortNo: b,
-        deleteBoo: "false",
+        sortNo: sort ? sort : 1,
+        deleteBoo: "false"
       };
       this.list2.push(content);
     },
@@ -180,8 +161,8 @@ export default {
     },
     changeSaveModal(val) {
       this.visible_save = val;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">

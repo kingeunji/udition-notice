@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="policy" :class="$mq">
     <div class="top">
       <div>약관 및 정책</div>
       <ul>
@@ -15,11 +15,16 @@
     </div>
     <div class="content-container">
       <select v-model="termsNo">
-        <option v-for="(version, i) in versions" :key="i" :value="i">
-          {{ version.version }}
-        </option>
+        <option v-for="(version, i) in versions" :key="i" :value="i">{{
+          version.version
+        }}</option>
       </select>
-      <div class="content">{{ this.content[this.termsNo].contents }}</div>
+      <div
+        class="content"
+        v-html="
+          this.content[this.termsNo] && this.content[this.termsNo].contents
+        "
+      ></div>
     </div>
   </section>
 </template>
@@ -36,12 +41,12 @@ export default {
       categorys: [
         { id: 1, title: "서비스 이용약관" },
         { id: 2, title: "유료서비스 이용약관" },
-        { id: 3, title: "개인정보 처리방침" }
+        { id: 3, title: "개인정보 처리방침" },
       ],
       categoryNo: 1,
       termsNo: 0,
       content: [],
-      versions: []
+      versions: [],
     };
   },
   created() {
@@ -50,7 +55,7 @@ export default {
   watch: {
     categoryNo() {
       this.fetchData();
-    }
+    },
   },
   methods: {
     // 카테고리 순서 이동
@@ -74,21 +79,47 @@ export default {
       // 카테고리에 맞는 버전 데이터 호출
       const resVer = await versionList.list(formData);
       this.versions = resVer.data.result;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
-section {
+.small {
+  width: 370px;
+  padding: 0 10px;
+
+  &.policy {
+    .top {
+      div {
+        font-size: 28px;
+      }
+      ul {
+        li {
+          font-size: 14px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+.large {
+  width: 100%;
+  min-width: 500px;
+  padding: 0 30px;
+}
+
+.policy {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 750px;
+  max-width: 750px;
   margin: 57px auto 0;
 
   .top {
     width: 100%;
+    margin: 0;
 
     div {
       height: 38px;
@@ -120,6 +151,8 @@ section {
 
   .content-container {
     width: 100%;
+    padding: 0;
+    border: none;
 
     select {
       width: 126px;
