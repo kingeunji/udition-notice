@@ -1,6 +1,11 @@
 <template>
   <div class="content">
-    <div @click="goToDetail(data)" v-for="data in datas" :key="data.noticeNo" class="detail">
+    <div
+      @click="goToDetail(data)"
+      v-for="data in datas"
+      :key="data.noticeNo"
+      class="detail"
+    >
       <div class="detail-text">
         <p class="category">{{ noticeType[data.noticeType] }}</p>
         <h3>{{ data.title }}</h3>
@@ -10,11 +15,11 @@
         <img
           :src="
             'http://192.168.0.44:8081/api/notice/getSmallFile?downloadFileName=' +
-              data.image
+            data.image
           "
           alt="noticeimg"
           :class="{
-            active: data.image.length > 10 ? image == true : image == false
+            active: data.image.length > 10 ? image == true : image == false,
           }"
         />
       </div>
@@ -29,8 +34,8 @@ export default {
     datas: {
       type: Array,
       required: true,
-      createDate: ""
-    }
+      createDate: "",
+    },
   },
   data() {
     return {
@@ -40,9 +45,9 @@ export default {
         0: "전체",
         1: "공지",
         2: "이벤트",
-        3: "보도자료"
+        3: "보도자료",
       },
-      image: false
+      image: false,
     };
   },
   methods: {
@@ -53,12 +58,12 @@ export default {
     },
     convertToDate(date) {
       return new Date(date).toISOString().slice(0, 10);
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
 .content {
   .detail {
     display: flex;

@@ -4,8 +4,7 @@
       <div class="bg-white">
         <div class="text-wrapper">
           <p>
-            <strong>분류 삭제</strong>는 되돌릴 수 없습니다.
-            <br />정말
+            <strong>분류 삭제</strong>는 되돌릴 수 없습니다. <br />정말
             진행하시겠습니까?
           </p>
           <div class="button-wrapper">
@@ -27,8 +26,8 @@ export default {
     visible: {
       type: Boolean,
       require: true,
-      default: false
-    }
+      default: false,
+    },
     // datas: {
     //   type: Number,
     //   required: true,
@@ -37,13 +36,13 @@ export default {
   },
   data() {
     return {
-      modalPlugSave: this.visible_save
+      modalPlugSave: this.visible_save,
     };
   },
   watch: {
     visible(val) {
       this.modalPlugSave = val;
-    }
+    },
   },
   methods: {
     // handleWrapperClick() {
@@ -57,12 +56,12 @@ export default {
     goToSave() {
       this.modalPlugSave = false;
       this.$emit("save", false);
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style lang="scss">
+<style scope lang="scss">
 .cover-bg {
   display: flex;
   align-items: center;

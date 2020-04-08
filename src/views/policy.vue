@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section :class="$mq">
     <div class="top">
       <div>약관 및 정책</div>
       <ul>
@@ -8,18 +8,14 @@
           :key="category.id"
           @click="selectCategory(category.id, i)"
           :class="{ active: i == 0 }"
-        >
-          {{ category.title }}
-        </li>
+        >{{ category.title }}</li>
       </ul>
     </div>
     <div class="content-container">
       <select v-model="termsNo">
-        <option v-for="(version, i) in versions" :key="i" :value="i">
-          {{ version.version }}
-        </option>
+        <option v-for="(version, i) in versions" :key="i" :value="i">{{ version.version }}</option>
       </select>
-      <div class="content">{{ this.content[this.termsNo].contents }}</div>
+      <div class="content"></div>
     </div>
   </section>
 </template>
