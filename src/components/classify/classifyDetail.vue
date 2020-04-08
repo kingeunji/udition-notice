@@ -155,8 +155,6 @@ export default {
       }
     },
     goToAdd(cnt) {
-      this.newTitle = cnt;
-      console.log("콘텐츠", this.contents.length);
       if (this.list2.length > 0) {
         var no = this.list2[this.list2.length - 1].categoryNo + 1;
         var sort = this.list2.length + 1;
