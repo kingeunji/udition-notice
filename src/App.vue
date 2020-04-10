@@ -5,13 +5,9 @@
 </template>
 
 <script>
-// import policyClassify from "./views/policyClassify";
-
 export default {
   name: "App",
-  components: {
-    // policyClassify
-  }
+  components: {},
 };
 </script>
 

@@ -28,11 +28,6 @@ export default {
       require: true,
       default: false,
     },
-    // datas: {
-    //   type: Number,
-    //   required: true,
-    //   createDate: ""
-    // }
   },
   data() {
     return {
@@ -45,10 +40,6 @@ export default {
     },
   },
   methods: {
-    // handleWrapperClick() {
-    //   console.log("emit", this.title);
-    //   this.$emit("update:visible", false);
-    // },
     closeModal() {
       this.modalPlugSave = false;
       this.$emit("change", false);
