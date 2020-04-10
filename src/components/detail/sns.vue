@@ -74,6 +74,10 @@ export default {
     align-items: center;
     cursor: pointer;
 
+    img {
+      margin-bottom: 0;
+    }
+
     &.twitter {
       border: solid 1px #1da1f2;
 

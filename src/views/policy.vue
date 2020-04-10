@@ -8,19 +8,19 @@
           :key="category.id"
           @click="selectCategory(category.id, i)"
           :class="{ active: i == 0 }"
-        >
-          {{ category.title }}
-        </li>
+        >{{ category.title }}</li>
       </ul>
     </div>
     <div class="content-container">
       <select v-model="termsNo">
-        <option v-for="(version, i) in versions" :key="i" :value="i">{{
+        <option v-for="(version, i) in versions" :key="i" :value="i">
+          {{
           version.version
-        }}</option>
+          }}
+        </option>
       </select>
       <div
-        class="content"
+        class="ql-editor"
         v-html="
           this.content[this.termsNo] && this.content[this.termsNo].contents
         "
@@ -30,8 +30,12 @@
 </template>
 
 <script>
+import Vue from "vue";
+import VueQuillEditor from "vue-quill-editor";
 import { policy } from "@/api/index";
 import { versionList } from "@/api/index";
+
+Vue.use(VueQuillEditor);
 
 export default {
   name: "policy",
@@ -41,12 +45,12 @@ export default {
       categorys: [
         { id: 1, title: "서비스 이용약관" },
         { id: 2, title: "유료서비스 이용약관" },
-        { id: 3, title: "개인정보 처리방침" },
+        { id: 3, title: "개인정보 처리방침" }
       ],
       categoryNo: 1,
       termsNo: 0,
       content: [],
-      versions: [],
+      versions: []
     };
   },
   created() {
@@ -55,7 +59,7 @@ export default {
   watch: {
     categoryNo() {
       this.fetchData();
-    },
+    }
   },
   methods: {
     // 카테고리 순서 이동
@@ -75,16 +79,17 @@ export default {
       formData.append("categoryNo", this.categoryNo);
       const res = await policy.list(formData);
       this.content = res.data.result;
+      console.log(this.content);
 
       // 카테고리에 맞는 버전 데이터 호출
       const resVer = await versionList.list(formData);
       this.versions = resVer.data.result;
-    },
-  },
+    }
+  }
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .small {
   width: 370px;
   padding: 0 10px;
@@ -164,6 +169,35 @@ export default {
       background-color: #f2f2f2;
       margin: 33px 0 36px;
       text-indent: 18px;
+    }
+
+    .ql-editor {
+      p strong em u {
+        font-style: italic;
+        font-weight: bold;
+        border-bottom: 1px solid black;
+      }
+      p strong em {
+        font-style: italic;
+        font-weight: bold;
+      }
+      p strong u {
+        font-weight: bold;
+        border-bottom: 1px solid black;
+      }
+      p em u {
+        font-style: italic;
+        border-bottom: 1px solid black;
+      }
+      p strong {
+        font-weight: bold;
+      }
+      p em {
+        font-style: italic;
+      }
+      p u {
+        border-bottom: 1px solid black;
+      }
     }
   }
 }
