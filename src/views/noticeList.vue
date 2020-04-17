@@ -3,18 +3,10 @@
     <h2>공지사항</h2>
     <div class="list">
       <ul class="select-list">
-        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">
-          전체
-        </li>
-        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">
-          공지
-        </li>
-        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">
-          이벤트
-        </li>
-        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">
-          보도자료
-        </li>
+        <li @click="noticeType = 0" :class="{ active: noticeType == 0 }">전체</li>
+        <li @click="noticeType = 1" :class="{ active: noticeType == 1 }">공지</li>
+        <li @click="noticeType = 2" :class="{ active: noticeType == 2 }">이벤트</li>
+        <li @click="noticeType = 3" :class="{ active: noticeType == 3 }">보도자료</li>
       </ul>
       <div class="content-container">
         <listDetail :datas="noticeList" />
@@ -45,7 +37,7 @@ export default {
   props: {},
   components: {
     listDetail,
-    Paginate,
+    Paginate
   },
   // 초기화, 기본 값 설정
   data() {
@@ -54,7 +46,7 @@ export default {
       noticeType: 0,
       noticeList: [],
       pageCount: 0,
-      pageNum: 0,
+      pageNum: 0
     };
   },
   watch: {
@@ -65,7 +57,7 @@ export default {
     },
     requestPage() {
       this.fetchData();
-    },
+    }
   },
   created() {
     this.fetchData();
@@ -91,12 +83,12 @@ export default {
       this.fetchData();
 
       this.pageNum = pageNum;
-    },
-  },
+    }
+  }
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .container {
   width: 750px;
   margin: 0 auto;

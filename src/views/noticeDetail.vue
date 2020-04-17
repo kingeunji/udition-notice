@@ -92,7 +92,9 @@ export default {
       formData.append("noticeType", type);
       const res = await noticeDetail.list(formData);
       this.content = res.data.result[0];
-      console.log("내용", this.content.tts);
+      this.content.url = window.location.href;
+      console.log("data", this.content);
+      console.log("url", this.content.url);
     },
     convertToDate(date) {
       return new Date(date).toISOString().slice(0, 10);
@@ -106,7 +108,6 @@ export default {
 </script>
 
 <style lang="scss">
-/* scope 빼면 edit 스타일 적용이 된다. */
 section {
   display: flex;
   flex-direction: column;
@@ -182,6 +183,10 @@ section {
       }
       p u {
         border-bottom: 1px solid black;
+      }
+
+      h1 {
+        font-size: 36px;
       }
     }
 
