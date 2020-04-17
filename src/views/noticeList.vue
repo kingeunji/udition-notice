@@ -1,5 +1,5 @@
 <template>
-  <div id="list" class="container m-6">
+  <div id="list" class="notice-container m-6">
     <h2>공지사항</h2>
     <div class="list">
       <ul class="select-list">
@@ -89,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss">
-.container {
+.notice-container {
   width: 750px;
   margin: 0 auto;
   color: #1f2125;
