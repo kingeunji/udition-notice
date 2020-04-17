@@ -198,6 +198,10 @@ export default {
       p u {
         border-bottom: 1px solid black;
       }
+
+      h1 {
+        font-size: 36px;
+      }
     }
   }
 }
